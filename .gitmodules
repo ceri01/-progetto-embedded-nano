@@ -1,0 +1,3 @@
+[submodule "lib/FirmataMaster"]
+	path = lib/FirmataMaster
+	url = https://github.com/ceri01/FirmataMaster
