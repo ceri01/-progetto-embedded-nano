@@ -13,9 +13,10 @@
 #define NORTH_LIMIT_SWITCH 6
 #define SOUTH_LIMIT_SWITCH 7
 
-#define EPSILON 1
-#define DELAY 2000
+#define EPSILON 30
+#define CORRECTION 2000
 
+#define DEBUG
 
 /*
 	Struct to describe each sensor value
@@ -30,8 +31,7 @@ struct brightness {
 enum Direction { North = NORTH_SWITCH, South = SOUTH_SWITCH, East = EAST_SWITCH, West = WEST_SWITCH};
 
 /*
-	Read data provided from light sensors.
-	This function return a struct that contains four ints 
+	Read and return the data provided from light sensors. 
 */
 struct brightness readSensors() {
 	brightness brightnessLevel;
@@ -42,24 +42,38 @@ struct brightness readSensors() {
 	return brightnessLevel;
 }
 
+/*
+	Move motors to maximize total brightness.
+*/
 void executeMovement() {
 	brightness data = readSensors();
 	int vertical = data.north - data.south;
 	int horizontal = data.east - data.west;
 
 	if (vertical > EPSILON) {
-		motorMove(Direction::North, DELAY);
-	} else if (vertical < EPSILON) {
-		motorMove(Direction::South, DELAY);
+		motorMove(Direction::North, CORRECTION);
+#ifdef DEBUG
+		Serial.println("Moving north.");
+#endif
+	} else if (vertical < -EPSILON) {
+		motorMove(Direction::South, CORRECTION);
+#ifdef DEBUG
+		Serial.println("Moving south.");
+#endif
 	}
 
 	if (horizontal > EPSILON) {
-		motorMove(Direction::East, DELAY);
-	} else if (vertical < EPSILON) {
-		motorMove(Direction::West, DELAY);
+		motorMove(Direction::East, CORRECTION);
+#ifdef DEBUG
+		Serial.println("Moving east.");
+#endif
+	} else if (horizontal < -EPSILON) {
+		motorMove(Direction::West, CORRECTION);
+#ifdef DEBUG
+		Serial.println("Moving west.");
+#endif
 	}
 }
-
 
 /*
 	Move a motor in a given direction for a given time (in milliseconds).
@@ -95,26 +109,7 @@ void setup() {
 }
 
 void loop() {
-	/*
-	bool ret;
-	ret = motorMove(Direction::North, DELAY);
-	Serial.print("N? ");
-	Serial.print(ret);
-
-	ret = motorMove(Direction::South, DELAY);
-	Serial.print("\tS? ");
-	Serial.print(ret);
-
-	ret = motorMove(Direction::East, DELAY);
-	Serial.print("\tE? ");
-	Serial.print(ret);
-
-	ret = motorMove(Direction::West, DELAY);
-	Serial.print("\tW? ");
-	Serial.print(ret);
-
-	Serial.println();
-
+#ifdef DEBUG
 	brightness sensors = readSensors();
 	Serial.print("N=");
 	Serial.print(sensors.north);
@@ -125,10 +120,8 @@ void loop() {
 	Serial.print("\tW=");
 	Serial.print(sensors.west);
 	Serial.println();
-	*/
+#endif
 
-	while (!motorMove(Direction::South, 1)) {
-
-	}
-	delay(30000);
+	executeMovement();
+	delay(1000);
 }
