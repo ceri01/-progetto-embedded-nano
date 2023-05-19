@@ -14,6 +14,14 @@ void motorMove(Direction direction, int period) { // togliere parametri
 	uint8_t digitalPin = static_cast<int>(direction);
 	digitalWrite(digitalPin, HIGH);
 
+#ifdef DEBUG
+	Serial.print("Moving motor on PIN ");
+	Serial.print(digitalPin);
+	Serial.print(" for ");
+	Serial.print(period);
+	Serial.println(" milliseconds");
+#endif
+
 	motorFeedbackTask.setCallback(motorMoveFeedback);
 	motorFeedbackTask.delay(period);
 	motorFeedbackTask.enable();
@@ -22,8 +30,20 @@ void motorMove(Direction direction, int period) { // togliere parametri
 // questa funzione diventa un task
 // (((è già void)))
 void motorMoveFeedback() {
+#ifdef DEBUG
+	Serial.println("motorMoveFeedback called");
+#endif
+
 	NORTH_LIMIT_REACHED = digitalRead(NORTH_LIMIT_SWITCH);
 	SOUTH_LIMIT_REACHED = digitalRead(SOUTH_LIMIT_SWITCH);
+
+#ifdef DEBUG
+	Serial.println("Check feedback");
+	Serial.print("Limit north ");
+	Serial.println(NORTH_LIMIT_REACHED);
+	Serial.print("Limit south ");
+	Serial.println(SOUTH_LIMIT_REACHED);
+#endif
 
 	// Shut down all motors
 	for (const auto direction : ALL_DIRECTIONS) {
@@ -64,6 +84,7 @@ void executeMovement() {
 #endif
 	}
 }
+
 /*
 	Move panel to the default position (horizontal)
 */
