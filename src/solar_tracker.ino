@@ -1,21 +1,22 @@
 #include <TaskScheduler.h>
+#include <ArduinoJson.h>
 
 #include "Config.h"
 #include "Movement.h"
 #include "Sensors.h"
+#include "Communication.h"
 
 Scheduler runner;
 void executeMovement();
 
 Task executeMovementTask(SENSOR_CHECK_INTERVAL, TASK_FOREVER, &executeMovement);
+Task communicationTask(COMMUNICATION_INTERVAL, TASK_FOREVER, &sendData);
 #ifdef DEBUG
 Task sensorPrintDebugTask(1000, TASK_FOREVER, &sensorPrintDebug);
 #endif
 
-
 void setup() {
-	Serial.begin(9600);
-	delay(2000);
+	Serial.begin(9600, SERIAL_7N1);
 
 	pinMode(LED, OUTPUT);
 	pinMode(NORTH_SWITCH, OUTPUT);
@@ -27,6 +28,7 @@ void setup() {
 	
 	runner.init();
 	runner.addTask(executeMovementTask);
+	runner.addTask(communicationTask);
 #ifdef DEBUG
 	runner.addTask(sensorPrintDebugTask);
 #endif
