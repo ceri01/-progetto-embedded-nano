@@ -11,7 +11,16 @@ enum Direction {
     West = WEST_SWITCH
 };
 
-bool motorMove(Direction, int);
+static const Direction ALL_DIRECTIONS[] = {
+    North,
+    South,
+    East,
+    West
+};
+
+void motorMove(Direction, int   );
+
+void motorMoveFeedback();
 
 void executeMovement();
 
