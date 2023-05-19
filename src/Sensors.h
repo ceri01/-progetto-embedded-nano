@@ -15,6 +15,8 @@ struct brightness {
 
 struct brightness readSensors();
 
+bool isDark(brightness levels);
+
 #ifdef DEBUG
 void sensorPrintDebug();
 #endif

@@ -7,7 +7,6 @@ bool NORTH_LIMIT_REACHED = false;
 
 /*
 	Move a motor in a given direction for a given time (in milliseconds).
-	Then, return true if the limit switch was activated, false otherwise.
 */
 void motorMove(Direction direction, int period) { // togliere parametri
 	uint8_t digitalPin = static_cast<int>(direction);
@@ -25,8 +24,6 @@ void motorMove(Direction direction, int period) { // togliere parametri
 	motorFeedbackTask.enable();
 }
 
-// questa funzione diventa un task
-// (((è già void)))
 void motorMoveFeedback() {
 #ifdef DEBUG
 	Serial.println("motorMoveFeedback called");
@@ -36,7 +33,6 @@ void motorMoveFeedback() {
 	SOUTH_LIMIT_REACHED = digitalRead(SOUTH_LIMIT_SWITCH);
 
 #ifdef DEBUG
-	Serial.println("Check feedback");
 	Serial.print("Limit north ");
 	Serial.println(NORTH_LIMIT_REACHED);
 	Serial.print("Limit south ");
