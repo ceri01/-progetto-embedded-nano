@@ -1,32 +1,44 @@
 #include "Movement.h"
 
+Task motorFeedbackTask(TASK_MILLISECOND, TASK_ONCE, &motorMoveFeedback); // non so come chiamarlo
+
+bool SOUTH_LIMIT_REACHED = false;
+bool NORTH_LIMIT_REACHED = false;
+
 /*
 	Move a motor in a given direction for a given time (in milliseconds).
 	Then, return true if the limit switch was activated, false otherwise.
-*/ 
-bool motorMove(Direction direction, int period) {
-	uint8_t digitalPin = static_cast<int>(direction);
-	
-	digitalWrite(digitalPin, HIGH);
-	delay(period);
+*/
 
-	bool ret = false;
-	if (direction == Direction::North) {
-		ret = digitalRead(NORTH_LIMIT_SWITCH);
-	} else if (direction == Direction::South) {
-		ret = digitalRead(SOUTH_LIMIT_SWITCH);
+void motorMove(Direction direction, int period) { // togliere parametri
+	uint8_t digitalPin = static_cast<int>(direction);
+	digitalWrite(digitalPin, HIGH);
+
+	motorFeedbackTask.setCallback(motorMoveFeedback);
+	motorFeedbackTask.delay(period);
+	motorFeedbackTask.enable();
+}
+
+// questa funzione diventa un task
+// (((è già void)))
+void motorMoveFeedback() {
+	NORTH_LIMIT_REACHED = digitalRead(NORTH_LIMIT_SWITCH);
+	SOUTH_LIMIT_REACHED = digitalRead(SOUTH_LIMIT_SWITCH);
+
+	// Shut down all motors
+	for (const auto direction : ALL_DIRECTIONS) {
+		uint8_t digitalPin = static_cast<int>(direction);
+		digitalWrite(digitalPin, LOW);
 	}
-	digitalWrite(digitalPin, LOW);
-	return ret;
 }
 
 /*
 	Move motors to maximize total brightness.
 */
 void executeMovement() {
-	brightness data = readSensors();
-	int vertical = data.north - data.south;
-	int horizontal = data.east - data.west;
+	const brightness data = readSensors();
+	const int vertical = data.north - data.south;
+	const int horizontal = data.east - data.west;
 
 	if (vertical > EPSILON) {
 		motorMove(Direction::North, MOTOR_MOVEMENT_TIME);
@@ -56,5 +68,7 @@ void executeMovement() {
 	Move panel to the default position (horizontal)
 */
 void goHome() {
-	while (!motorMove(Direction::South, MOTOR_MOVEMENT_TIME)) { }
-};
+	while (!SOUTH_LIMIT_REACHED) {
+		motorMove(Direction::South, MOTOR_MOVEMENT_TIME);
+	};
+}

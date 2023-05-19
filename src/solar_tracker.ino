@@ -7,7 +7,6 @@
 #include "Communication.h"
 
 Scheduler runner;
-void executeMovement();
 
 Task executeMovementTask(SENSOR_CHECK_INTERVAL, TASK_FOREVER, &executeMovement);
 Task communicationTask(COMMUNICATION_INTERVAL, TASK_FOREVER, &sendData);
