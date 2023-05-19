@@ -1,6 +1,6 @@
 #include "Movement.h"
 
-Task motorFeedbackTask(TASK_MILLISECOND, TASK_ONCE, &motorMoveFeedback); // non so come chiamarlo
+Task motorFeedbackTask(TASK_MILLISECOND, TASK_ONCE, &motorMoveFeedback);
 
 bool SOUTH_LIMIT_REACHED = false;
 bool NORTH_LIMIT_REACHED = false;
@@ -9,7 +9,6 @@ bool NORTH_LIMIT_REACHED = false;
 	Move a motor in a given direction for a given time (in milliseconds).
 	Then, return true if the limit switch was activated, false otherwise.
 */
-
 void motorMove(Direction direction, int period) { // togliere parametri
 	uint8_t digitalPin = static_cast<int>(direction);
 	digitalWrite(digitalPin, HIGH);
@@ -22,7 +21,6 @@ void motorMove(Direction direction, int period) { // togliere parametri
 	Serial.println(" milliseconds");
 #endif
 
-	motorFeedbackTask.setCallback(motorMoveFeedback);
 	motorFeedbackTask.delay(period);
 	motorFeedbackTask.enable();
 }
