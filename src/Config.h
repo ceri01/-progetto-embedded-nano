@@ -4,6 +4,7 @@
 #include <Arduino.h>
 
 #define DEBUG
+// #define ENABLE_COMMUNICATION
 
 // Task scheduler configuration
 #define _TASK_PRIORITY
