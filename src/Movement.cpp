@@ -1,5 +1,9 @@
 #include "Movement.h"
 
+#ifdef DEBUG
+#include <MemoryFree.h>
+#endif
+
 bool NORTH_LIMIT_REACHED = false;
 bool SOUTH_LIMIT_REACHED = false;
 
@@ -22,6 +26,16 @@ void motorMove(Direction direction, int period) {
 
 	Task *motorFeedbackTask = new Task(TASK_MILLISECOND, TASK_ONCE, &motorMoveFeedback, &hpRunner, true);
 	motorFeedbackTask->delay(period);
+
+	// Allocate the direction LTS object on the heap (not on the stack)
+	Direction *directionHeap = (Direction*) malloc(sizeof(Direction));
+	*directionHeap = direction;
+	motorFeedbackTask->setLtsPointer(directionHeap);
+
+#ifdef DEBUG
+	Serial.print("Free memory:\t");
+	Serial.println(freeMemory());
+#endif
 }
 
 void motorMoveFeedback() {
@@ -29,25 +43,33 @@ void motorMoveFeedback() {
 	Serial.println("motorMoveFeedback called");
 #endif
 
-	NORTH_LIMIT_REACHED = digitalRead(NORTH_LIMIT_SWITCH);
-	SOUTH_LIMIT_REACHED = digitalRead(SOUTH_LIMIT_SWITCH);
+	// Get LTS memory
+	Direction& direction = *((Direction*) hpRunner.currentLts());
+	uint8_t digitalPin = static_cast<int>(direction);
 
+	// Read limit switches
+	if (direction == Direction::North) {
+		NORTH_LIMIT_REACHED = !digitalRead(NORTH_LIMIT_SWITCH);
 #ifdef DEBUG
-	Serial.print("Limit north ");
-	Serial.println(NORTH_LIMIT_REACHED);
-	Serial.print("Limit south ");
-	Serial.println(SOUTH_LIMIT_REACHED);
+		Serial.print("Limit north ");
+		Serial.println(NORTH_LIMIT_REACHED);
 #endif
-
-	// Shut down all motors
-	for (const auto direction : ALL_DIRECTIONS) {
-		uint8_t digitalPin = static_cast<int>(direction);
-		digitalWrite(digitalPin, LOW);
+	} else if (direction == Direction::South) {
+		SOUTH_LIMIT_REACHED = !digitalRead(SOUTH_LIMIT_SWITCH);
+#ifdef DEBUG
+		Serial.print("Limit south ");
+		Serial.println(SOUTH_LIMIT_REACHED);
+#endif
 	}
 
+	// Actually shut down the motor
+	digitalWrite(digitalPin, LOW);
+
+	// Disable the task and free up the memory
 	Task *currentTask = hpRunner.getCurrentTask();
 	currentTask->disable();
 	free(currentTask);
+	free(&direction);
 }
 
 /*
