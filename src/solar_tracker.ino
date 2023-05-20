@@ -34,10 +34,10 @@ void setup() {
 	pinMode(SOUTH_LIMIT_SWITCH, INPUT);
 	
 	runner.init();
-	//runner.setHighPriorityScheduler(&hpRunner);
+	runner.setHighPriorityScheduler(&hpRunner);
 
 	runner.addTask(executeMovementTask);
-	runner.addTask(motorFeedbackTask);
+	hpRunner.addTask(motorFeedbackTask);
 #ifdef ENABLE_COMMUNICATION
 	runner.addTask(communicationTask);
 #endif
@@ -56,5 +56,4 @@ void setup() {
 
 void loop() {
 	runner.execute();
-	//Serial.println(runner.timeUntilNextIteration(motorFeedbackTask));
 }
