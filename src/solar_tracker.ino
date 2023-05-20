@@ -1,18 +1,19 @@
+#include "Config.h"
+
 #include <TaskScheduler.h>
 #include <ArduinoJson.h>
 
-#include "Config.h"
 #include "Movement.h"
 #include "Sensors.h"
 #include "Communication.h"
 
-Scheduler runner;
+Scheduler runner, hpRunner;
 
-Task executeMovementTask(SENSOR_CHECK_INTERVAL, TASK_FOREVER, &executeMovement);
-Task communicationTask(COMMUNICATION_INTERVAL, TASK_FOREVER, &sendData);
-Task motorFeedbackTask(TASK_MILLISECOND, TASK_ONCE, &motorMoveFeedback);
+Task executeMovementTask(SENSOR_CHECK_INTERVAL, TASK_FOREVER, &executeMovement, &runner);
+Task communicationTask(COMMUNICATION_INTERVAL, TASK_FOREVER, &sendData, &runner);
+Task motorFeedbackTask(TASK_MILLISECOND, TASK_ONCE, &motorMoveFeedback, &hpRunner);
 #ifdef DEBUG
-Task sensorPrintDebugTask(1000, TASK_FOREVER, &sensorPrintDebug);
+Task sensorPrintDebugTask(1000, TASK_FOREVER, &sensorPrintDebug, &runner);
 #endif
 
 void setup() {
@@ -27,13 +28,10 @@ void setup() {
 	pinMode(SOUTH_LIMIT_SWITCH, INPUT_PULLUP);
 	
 	runner.init();
-	runner.addTask(executeMovementTask);
-	runner.addTask(communicationTask);
-	runner.addTask(motorFeedbackTask);
-#ifdef DEBUG
-	runner.addTask(sensorPrintDebugTask);
-#endif
+	runner.setHighPriorityScheduler(&hpRunner);
+
 	executeMovementTask.enable();
+	sensorPrintDebugTask.enable();
 }
 
 void loop() {

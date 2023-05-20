@@ -1,10 +1,17 @@
 #ifndef _CONFIG_H
 #define _CONFIG_H
 
+#include <Arduino.h>
+
 #define DEBUG
 
-#include <Arduino.h>
+// Task scheduler configuration
+#define _TASK_PRIORITY
+#define _TASK_TIMECRITICAL
+#define _TASK_SLEEP_ON_IDLE_RUN
 #include <TaskSchedulerDeclarations.h>
+
+// Pin configuration
 
 #define NORTH_SENSOR A0
 #define SOUTH_SENSOR A3

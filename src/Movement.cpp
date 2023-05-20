@@ -8,7 +8,7 @@ extern Task motorFeedbackTask;
 /*
 	Move a motor in a given direction for a given time (in milliseconds).
 */
-void motorMove(Direction direction, int period) { // togliere parametri
+void motorMove(Direction direction, int period) {
 	uint8_t digitalPin = static_cast<int>(direction);
 	digitalWrite(digitalPin, HIGH);
 
