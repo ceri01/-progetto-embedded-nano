@@ -10,6 +10,7 @@ Scheduler runner;
 
 Task executeMovementTask(SENSOR_CHECK_INTERVAL, TASK_FOREVER, &executeMovement);
 Task communicationTask(COMMUNICATION_INTERVAL, TASK_FOREVER, &sendData);
+Task motorFeedbackTask(TASK_MILLISECOND, TASK_ONCE, &motorMoveFeedback);
 #ifdef DEBUG
 Task sensorPrintDebugTask(1000, TASK_FOREVER, &sensorPrintDebug);
 #endif
@@ -28,6 +29,7 @@ void setup() {
 	runner.init();
 	runner.addTask(executeMovementTask);
 	runner.addTask(communicationTask);
+	runner.addTask(motorFeedbackTask);
 #ifdef DEBUG
 	runner.addTask(sensorPrintDebugTask);
 #endif

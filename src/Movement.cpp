@@ -1,9 +1,9 @@
 #include "Movement.h"
 
-Task motorFeedbackTask(TASK_MILLISECOND, TASK_ONCE, &motorMoveFeedback);
-
-bool SOUTH_LIMIT_REACHED = false;
 bool NORTH_LIMIT_REACHED = false;
+bool SOUTH_LIMIT_REACHED = false;
+
+extern Task motorFeedbackTask;
 
 /*
 	Move a motor in a given direction for a given time (in milliseconds).

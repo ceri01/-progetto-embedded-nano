@@ -18,7 +18,7 @@ static const Direction ALL_DIRECTIONS[] = {
     West
 };
 
-void motorMove(Direction, int   );
+void motorMove(Direction, int);
 
 void motorMoveFeedback();
 
