@@ -8,8 +8,11 @@
 
 // Task scheduler configuration
 #define _TASK_PRIORITY
+// #define _TASK_WDT_IDS
 #define _TASK_TIMECRITICAL
 #define _TASK_SLEEP_ON_IDLE_RUN
+//#define _TASK_SELF_DESTRUCT
+#define _TASK_LTS_POINTER
 #include <TaskSchedulerDeclarations.h>
 
 // Pin configuration
@@ -31,7 +34,7 @@
 
 #define DARK_LIMIT 50
 
-#define MOTOR_MOVEMENT_TIME 2 * TASK_SECOND
+#define MOTOR_MOVEMENT_TIME 1 * TASK_SECOND
 
 #define SENSOR_CHECK_INTERVAL 5 * TASK_SECOND
 #define COMMUNICATION_INTERVAL 10 * TASK_SECOND

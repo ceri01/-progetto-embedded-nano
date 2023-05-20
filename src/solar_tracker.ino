@@ -14,7 +14,6 @@
 Scheduler runner, hpRunner;
 
 Task executeMovementTask(SENSOR_CHECK_INTERVAL, TASK_FOREVER, &executeMovement);
-Task motorFeedbackTask(TASK_MILLISECOND, TASK_FOREVER, &motorMoveFeedback);
 #ifdef ENABLE_COMMUNICATION
 Task communicationTask(COMMUNICATION_INTERVAL, TASK_FOREVER, &sendData);
 #endif
@@ -37,7 +36,6 @@ void setup() {
 	runner.setHighPriorityScheduler(&hpRunner);
 
 	runner.addTask(executeMovementTask);
-	hpRunner.addTask(motorFeedbackTask);
 #ifdef ENABLE_COMMUNICATION
 	runner.addTask(communicationTask);
 #endif

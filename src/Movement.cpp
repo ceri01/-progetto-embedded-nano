@@ -3,7 +3,7 @@
 bool NORTH_LIMIT_REACHED = false;
 bool SOUTH_LIMIT_REACHED = false;
 
-extern Task motorFeedbackTask;
+extern Scheduler hpRunner;
 
 /*
 	Move a motor in a given direction for a given time (in milliseconds).
@@ -20,8 +20,8 @@ void motorMove(Direction direction, int period) {
 	Serial.println(" milliseconds");
 #endif
 
-	motorFeedbackTask.enable();
-	motorFeedbackTask.delay(period);
+	Task *motorFeedbackTask = new Task(TASK_MILLISECOND, TASK_ONCE, &motorMoveFeedback, &hpRunner, true);
+	motorFeedbackTask->delay(period);
 }
 
 void motorMoveFeedback() {
@@ -45,8 +45,9 @@ void motorMoveFeedback() {
 		digitalWrite(digitalPin, LOW);
 	}
 
-	motorFeedbackTask.disable();
-	motorFeedbackTask.disable();
+	Task *currentTask = hpRunner.getCurrentTask();
+	currentTask->disable();
+	free(currentTask);
 }
 
 /*
