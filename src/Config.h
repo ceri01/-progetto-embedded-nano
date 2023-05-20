@@ -8,7 +8,7 @@
 
 // Task scheduler configuration
 #define _TASK_PRIORITY
-#define _TASK_TIMECRITICAL
+//#define _TASK_TIMECRITICAL
 #define _TASK_SLEEP_ON_IDLE_RUN
 #include <TaskSchedulerDeclarations.h>
 

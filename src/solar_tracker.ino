@@ -14,7 +14,7 @@
 Scheduler runner, hpRunner;
 
 Task executeMovementTask(SENSOR_CHECK_INTERVAL, TASK_FOREVER, &executeMovement);
-Task motorFeedbackTask(TASK_MILLISECOND, TASK_ONCE, &motorMoveFeedback);
+Task motorFeedbackTask(TASK_MILLISECOND, TASK_FOREVER, &motorMoveFeedback);
 #ifdef ENABLE_COMMUNICATION
 Task communicationTask(COMMUNICATION_INTERVAL, TASK_FOREVER, &sendData);
 #endif
@@ -30,14 +30,14 @@ void setup() {
 	pinMode(SOUTH_SWITCH, OUTPUT);
 	pinMode(EAST_SWITCH, OUTPUT);
 	pinMode(WEST_SWITCH, OUTPUT);
-	pinMode(NORTH_LIMIT_SWITCH, INPUT_PULLUP);
-	pinMode(SOUTH_LIMIT_SWITCH, INPUT_PULLUP);
+	pinMode(NORTH_LIMIT_SWITCH, INPUT);
+	pinMode(SOUTH_LIMIT_SWITCH, INPUT);
 	
 	runner.init();
-	runner.setHighPriorityScheduler(&hpRunner);
+	//runner.setHighPriorityScheduler(&hpRunner);
 
 	runner.addTask(executeMovementTask);
-	hpRunner.addTask(motorFeedbackTask);
+	runner.addTask(motorFeedbackTask);
 #ifdef ENABLE_COMMUNICATION
 	runner.addTask(communicationTask);
 #endif
@@ -56,4 +56,5 @@ void setup() {
 
 void loop() {
 	runner.execute();
+	//Serial.println(runner.timeUntilNextIteration(motorFeedbackTask));
 }

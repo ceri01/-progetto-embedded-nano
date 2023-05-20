@@ -20,8 +20,8 @@ void motorMove(Direction direction, int period) {
 	Serial.println(" milliseconds");
 #endif
 
-	motorFeedbackTask.delay(period);
 	motorFeedbackTask.enable();
+	motorFeedbackTask.delay(period);
 }
 
 void motorMoveFeedback() {
@@ -44,6 +44,9 @@ void motorMoveFeedback() {
 		uint8_t digitalPin = static_cast<int>(direction);
 		digitalWrite(digitalPin, LOW);
 	}
+
+	motorFeedbackTask.disable();
+	motorFeedbackTask.disable();
 }
 
 /*
@@ -64,9 +67,7 @@ void executeMovement() {
 #ifdef DEBUG
 		Serial.println("Moving south.");
 #endif
-	}
-
-	if (horizontal > EPSILON) {
+	} else if (horizontal > EPSILON) {
 		motorMove(Direction::East, MOTOR_MOVEMENT_TIME);
 #ifdef DEBUG
 		Serial.println("Moving east.");
