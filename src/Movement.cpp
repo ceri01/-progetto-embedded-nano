@@ -89,12 +89,12 @@ void executeMovement() {
 	const int vertical = data.north - data.south;
 	const int horizontal = data.east - data.west;
 
-	if (vertical > EPSILON) {
+	if (vertical > EPSILON && !NORTH_LIMIT_REACHED) {
 		motorMove(Direction::North, MOTOR_MOVEMENT_TIME);
 #ifdef DEBUG
 		Serial.println("Moving north.");
 #endif
-	} else if (vertical < -EPSILON) {
+	} else if (vertical < -EPSILON && !SOUTH_LIMIT_REACHED) {
 		motorMove(Direction::South, MOTOR_MOVEMENT_TIME);
 #ifdef DEBUG
 		Serial.println("Moving south.");
