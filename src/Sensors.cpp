@@ -27,6 +27,8 @@ void sensorPrintDebug() {
 	Serial.print(sensors.east);
 	Serial.print("\tW=");
 	Serial.print(sensors.west);
+	Serial.print("\tWind=");
+	Serial.print(analogRead(WIND_SENSOR));
 	Serial.println();
 }
 #endif

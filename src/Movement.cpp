@@ -137,12 +137,12 @@ void goHomeFeedback() {
 #endif
 	if (!SOUTH_LIMIT_REACHED) {
 #ifdef DEBUG
-	Serial.println("goHomeFeedback: moving...");
+		Serial.println("goHomeFeedback: moving...");
 #endif
 		motorMove(Direction::South, GO_HOME_MOVEMENT_TIME);
 	} else {
 #ifdef DEBUG
-	Serial.println("goHomeFeedback: self-destroy");
+		Serial.println("goHomeFeedback: self-destroy");
 #endif
 		goHomeTask.disable();
 
