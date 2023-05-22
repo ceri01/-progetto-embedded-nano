@@ -31,6 +31,12 @@ void setup() {
 	pinMode(WEST_SWITCH, OUTPUT);
 	pinMode(NORTH_LIMIT_SWITCH, INPUT);
 	pinMode(SOUTH_LIMIT_SWITCH, INPUT);
+
+	// Reset all relays
+	for (const auto direction : ALL_DIRECTIONS) {
+		uint8_t digitalPin = static_cast<int>(direction);
+		digitalWrite(digitalPin, LOW);
+	}
 	
 	runner.init();
 	runner.setHighPriorityScheduler(&hpRunner);
