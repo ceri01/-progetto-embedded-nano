@@ -10,6 +10,7 @@ bool SOUTH_LIMIT_REACHED = false;
 extern Scheduler runner;
 extern Scheduler hpRunner;
 extern Task executeMovementTask;
+extern Task goHomeTask;
 
 /*
 	Move a motor in a given direction for a given time (in milliseconds).
@@ -124,7 +125,7 @@ void goHome() {
 	executeMovementTask.disable();
 
 	// Spawn the goHomeFeedback task
-	new Task(GO_HOME_MOVEMENT_TIME + TASK_SECOND, TASK_FOREVER, &goHomeFeedback, &runner, true);
+	goHomeTask.enable();
 }
 
 /*
@@ -143,9 +144,7 @@ void goHomeFeedback() {
 #ifdef DEBUG
 	Serial.println("goHomeFeedback: self-destroy");
 #endif
-		Task *currentTask = runner.getCurrentTask();
-		currentTask->disable();
-		free(currentTask);
+		goHomeTask.disable();
 
 		// Re-enable the sensor check task
 		executeMovementTask.enableDelayed(HOME_SLEEP_TIME);

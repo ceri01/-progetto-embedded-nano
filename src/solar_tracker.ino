@@ -20,6 +20,7 @@ Task communicationTask(COMMUNICATION_INTERVAL, TASK_FOREVER, &sendData);
 #ifdef DEBUG
 Task sensorPrintDebugTask(1000, TASK_FOREVER, &sensorPrintDebug);
 #endif
+Task goHomeTask(GO_HOME_MOVEMENT_TIME + TASK_SECOND, TASK_FOREVER, &goHomeFeedback);
 
 void setup() {
 	Serial.begin(9600, SERIAL_7N1);
@@ -48,6 +49,7 @@ void setup() {
 #ifdef DEBUG
 	runner.addTask(sensorPrintDebugTask);
 #endif
+	runner.addTask(goHomeTask);
 
 	executeMovementTask.enable();
 #ifdef ENABLE_COMMUNICATION
