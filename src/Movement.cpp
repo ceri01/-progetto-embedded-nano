@@ -7,7 +7,9 @@
 bool NORTH_LIMIT_REACHED = false;
 bool SOUTH_LIMIT_REACHED = false;
 
+extern Scheduler runner;
 extern Scheduler hpRunner;
+extern Task executeMovementTask;
 
 /*
 	Move a motor in a given direction for a given time (in milliseconds).
@@ -77,6 +79,13 @@ void motorMoveFeedback() {
 */
 void executeMovement() {
 	const brightness data = readSensors();
+
+	// If it's dark, go home and have a good night sleep
+	if (isDark(data)) {
+		goHome();
+		return;
+	}
+
 	const int vertical = data.north - data.south;
 	const int horizontal = data.east - data.west;
 
@@ -107,7 +116,41 @@ void executeMovement() {
 	Move panel to the default position (horizontal)
 */
 void goHome() {
-	while (!SOUTH_LIMIT_REACHED) {
-		motorMove(Direction::South, MOTOR_MOVEMENT_TIME);
-	};
+#ifdef DEBUG
+	Serial.println("GOING HOME");
+#endif
+
+	// Disable the sensor check task
+	executeMovementTask.disable();
+
+	// Spawn the goHomeFeedback task
+	new Task(GO_HOME_MOVEMENT_TIME + TASK_SECOND, TASK_FOREVER, &goHomeFeedback, &runner, true);
+}
+
+/*
+	Periodically check if the 'going home' has reached the south limit
+*/
+void goHomeFeedback() {
+#ifdef DEBUG
+	Serial.println("goHomeFeedback called");
+#endif
+	if (!SOUTH_LIMIT_REACHED) {
+#ifdef DEBUG
+	Serial.println("goHomeFeedback: moving...");
+#endif
+		motorMove(Direction::South, GO_HOME_MOVEMENT_TIME);
+	} else {
+#ifdef DEBUG
+	Serial.println("goHomeFeedback: self-destroy");
+#endif
+		Task *currentTask = runner.getCurrentTask();
+		currentTask->disable();
+		free(currentTask);
+
+		// Re-enable the sensor check task
+		executeMovementTask.enableDelayed(HOME_SLEEP_TIME);
+
+		// Reset limit sensor
+		SOUTH_LIMIT_REACHED = false;
+	}
 }

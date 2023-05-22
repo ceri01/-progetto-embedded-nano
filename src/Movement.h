@@ -26,4 +26,6 @@ void executeMovement();
 
 void goHome();
 
+void goHomeFeedback();
+
 #endif

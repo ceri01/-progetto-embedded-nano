@@ -13,7 +13,7 @@ struct brightness readSensors() {
 }
 
 bool isDark(brightness levels) {
-	return levels.north + levels.south + levels.east + levels.west < DARK_LIMIT;
+	return (levels.north + levels.south + levels.east + levels.west) < DARK_LIMIT;
 }
 
 #ifdef DEBUG
