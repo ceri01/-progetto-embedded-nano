@@ -10,7 +10,7 @@ bool SOUTH_LIMIT_REACHED = false;
 extern Scheduler runner;
 extern Scheduler hpRunner;
 extern Task executeMovementTask;
-extern Task goHomeTask;
+extern Task goHomeFeedbackTask;
 extern Task windCheckTask;
 
 /*
@@ -127,7 +127,7 @@ void goHome() {
 	windCheckTask.disable();
 
 	// Spawn the goHomeFeedback task
-	goHomeTask.enable();
+	goHomeFeedbackTask.enable();
 }
 
 /*
@@ -146,7 +146,7 @@ void goHomeFeedback() {
 #ifdef DEBUG
 		Serial.println("goHomeFeedback: self-destroy");
 #endif
-		goHomeTask.disable();
+		goHomeFeedbackTask.disable();
 
 		// Re-enable the sensor check task
 		executeMovementTask.enableDelayed(HOME_SLEEP_TIME);

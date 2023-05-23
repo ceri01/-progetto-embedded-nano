@@ -21,7 +21,7 @@ Task communicationTask(COMMUNICATION_INTERVAL, TASK_FOREVER, &sendData);
 #ifdef DEBUG
 Task sensorPrintDebugTask(1000, TASK_FOREVER, &sensorPrintDebug);
 #endif
-Task goHomeTask(GO_HOME_MOVEMENT_TIME + TASK_SECOND, TASK_FOREVER, &goHomeFeedback);
+Task goHomeFeedbackTask(GO_HOME_MOVEMENT_TIME + TASK_SECOND, TASK_FOREVER, &goHomeFeedback);
 Task windCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &windCheck);
 Task buttonsCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &buttonsCheck);
 
@@ -52,7 +52,7 @@ void setup() {
 #ifdef DEBUG
 	runner.addTask(sensorPrintDebugTask);
 #endif
-	runner.addTask(goHomeTask);
+	runner.addTask(goHomeFeedbackTask);
 
 	executeMovementTask.enable();
 #ifdef ENABLE_COMMUNICATION
