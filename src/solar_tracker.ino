@@ -7,6 +7,7 @@
 
 #include "Movement.h"
 #include "Sensors.h"
+#include "Buttons.h"
 #ifdef ENABLE_COMMUNICATION
 #include "Communication.h"
 #endif
@@ -22,6 +23,7 @@ Task sensorPrintDebugTask(1000, TASK_FOREVER, &sensorPrintDebug);
 #endif
 Task goHomeTask(GO_HOME_MOVEMENT_TIME + TASK_SECOND, TASK_FOREVER, &goHomeFeedback);
 Task windCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &windCheck);
+Task buttonsCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &buttonsCheck);
 
 void setup() {
 	Serial.begin(9600, SERIAL_7N1);
@@ -58,7 +60,7 @@ void setup() {
 #endif
 #ifdef DEBUG
 	sensorPrintDebugTask.enable();
-#endif DEBUG
+#endif
 }
 
 void loop() {

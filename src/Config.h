@@ -16,7 +16,6 @@
 #include <TaskSchedulerDeclarations.h>
 
 // Pin configuration
-
 #define NORTH_SENSOR A0
 #define SOUTH_SENSOR A3
 #define EAST_SENSOR A1
@@ -31,6 +30,11 @@
 #define NORTH_LIMIT_SWITCH 6
 #define SOUTH_LIMIT_SWITCH 7
 
+#define TM_STROBE 8
+#define TM_CLOCK 9
+#define TM_DIO 10
+#define TM_HIGH_FREQ false
+
 #define EPSILON 30
 #define DARK_LIMIT 50
 #define WIND_LIMIT 100
@@ -44,5 +48,7 @@
 #define SENSOR_CHECK_INTERVAL 10 * TASK_SECOND
 #define COMMUNICATION_INTERVAL 10 * TASK_SECOND
 #define WIND_CHECK_INTERVAL 5 * TASK_SECOND
+#define BUTTONS_CHECK_INTERVAL 1 * TASK_SECOND
+#define BUTTONS_CHECK_INTERVAL_MANUAL 100 * TASK_MILLISECOND
 
 #endif
