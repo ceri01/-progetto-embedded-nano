@@ -1,4 +1,8 @@
 #include "Sensors.h"
+#include "Movement.h"
+#include "RunningAverage.h"
+
+RunningAverage windData(WIND_SAMPLES);
 
 /*
 	Read and return the data provided from light sensors. 
@@ -14,6 +18,29 @@ struct brightness readSensors() {
 
 bool isDark(brightness levels) {
 	return (levels.north + levels.south + levels.east + levels.west) < DARK_LIMIT;
+}
+
+void windCheck() {
+#ifdef DEBUG
+	Serial.println("windCheck called");
+#endif
+	int wind = analogRead(WIND_SENSOR);
+	windData.addValue(wind);
+
+	if (windData.getCount() < WIND_SAMPLES) {
+#ifdef DEBUG
+	Serial.println("windCheck: too few values");
+#endif
+		return;
+	}
+	if (windData.getMinInBuffer() > WIND_LIMIT) {
+#ifdef DEBUG
+	Serial.print("windCheck: ALERT!!!1!1 => min: ");
+	Serial.println(windData.getMinInBuffer());
+#endif
+		windData.clear();
+		goHome();
+	}
 }
 
 #ifdef DEBUG

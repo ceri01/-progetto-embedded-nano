@@ -17,6 +17,8 @@ struct brightness readSensors();
 
 bool isDark(brightness levels);
 
+void windCheck();
+
 #ifdef DEBUG
 void sensorPrintDebug();
 #endif

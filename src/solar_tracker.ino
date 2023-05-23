@@ -21,6 +21,7 @@ Task communicationTask(COMMUNICATION_INTERVAL, TASK_FOREVER, &sendData);
 Task sensorPrintDebugTask(1000, TASK_FOREVER, &sensorPrintDebug);
 #endif
 Task goHomeTask(GO_HOME_MOVEMENT_TIME + TASK_SECOND, TASK_FOREVER, &goHomeFeedback);
+Task windCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &windCheck);
 
 void setup() {
 	Serial.begin(9600, SERIAL_7N1);
