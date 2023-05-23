@@ -11,6 +11,7 @@ extern Scheduler runner;
 extern Scheduler hpRunner;
 extern Task executeMovementTask;
 extern Task goHomeTask;
+extern Task windCheckTask;
 
 /*
 	Move a motor in a given direction for a given time (in milliseconds).
@@ -121,8 +122,9 @@ void goHome() {
 	Serial.println("GOING HOME");
 #endif
 
-	// Disable the sensor check task
+	// Disable the wind and brightness check task
 	executeMovementTask.disable();
+	windCheckTask.disable();
 
 	// Spawn the goHomeFeedback task
 	goHomeTask.enable();
@@ -148,6 +150,7 @@ void goHomeFeedback() {
 
 		// Re-enable the sensor check task
 		executeMovementTask.enableDelayed(HOME_SLEEP_TIME);
+		windCheckTask.enableDelayed(HOME_SLEEP_TIME);
 
 		// Reset limit sensor
 		SOUTH_LIMIT_REACHED = false;
