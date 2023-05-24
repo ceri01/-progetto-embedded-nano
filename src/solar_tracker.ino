@@ -37,7 +37,9 @@ void setup() {
 	pinMode(NORTH_LIMIT_SWITCH, INPUT);
 	pinMode(SOUTH_LIMIT_SWITCH, INPUT);
 
+	// Init display
 	tm.displayBegin();
+	tm.displayText("--------");
 
 	// Reset all relays
 	for (const auto direction : ALL_DIRECTIONS) {

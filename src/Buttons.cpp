@@ -41,6 +41,13 @@ void buttonsCheck() {
     // Handle buttons
     modeButton(mode);
     directionsButtons(north, south, east, west);
+
+    // Set LEDs
+    if (MANUAL_MODE) {
+        for (uint8_t i = 0; i < 4; i++) {
+            tm.setLED(i, (buttons >> i) & 1);
+        }
+    }
 }
 
 void modeButton(uint8_t mode) {
@@ -68,10 +75,12 @@ void modeButton(uint8_t mode) {
         executeMovementTask.disable();
         windCheckTask.disable();
         buttonsCheckTask.setInterval(BUTTONS_CHECK_INTERVAL_MANUAL);
+        tm.displayText("NSEO----");
     } else {
         executeMovementTask.enable();
         windCheckTask.enable();
         buttonsCheckTask.setInterval(BUTTONS_CHECK_INTERVAL);
+        tm.displayText("--------");
     }
 }
 
