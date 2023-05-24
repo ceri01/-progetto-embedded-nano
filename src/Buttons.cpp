@@ -7,21 +7,36 @@ extern Task executeMovementTask;
 extern Task windCheckTask;
 extern Task buttonsCheckTask;
 
-TM1638plus tm(TM_STROBE, TM_CLOCK , TM_DIO, TM_HIGH_FREQ);
+extern TM1638plus tm;
 
 bool MANUAL_MODE = false;
 bool MODE_BUTTON_PRESSED = false;
 
+enum BUTTON_MASK {
+    NORTH_BUTTON = 0x01,
+    SOUTH_BUTTON = 0x02,
+    EAST_BUTTON = 0x04,
+    WEST_BUTTON = 0x08,
+    MODE_BUTTON = 0x80,
+};
+
 void buttonsCheck() {
     const uint8_t buttons = tm.readButtons();
-    const uint8_t dir = buttons >> 4;
 
     // Parse button values
-    const uint8_t mode = buttons << 7;
-    const uint8_t north = dir >> 3;
-    const uint8_t south = (dir >> 2) << 1;
-    const uint8_t east = (dir >> 1) << 2;
-    const uint8_t west = dir << 3;
+    const uint8_t mode = buttons & MODE_BUTTON;
+    const uint8_t north = buttons & NORTH_BUTTON;
+    const uint8_t south = buttons & SOUTH_BUTTON;
+    const uint8_t east = buttons & EAST_BUTTON;
+    const uint8_t west = buttons & WEST_BUTTON;
+
+#ifdef DEBUG
+    Serial.print("buttonsCheck:\tbuttons: ");
+    Serial.println(buttons);
+    Serial.print("buttonsCheck:\t(parsed) north / south / east / west / mode:\t");
+    Serial.print(north); Serial.print(south); Serial.print(east); Serial.print(west);
+    Serial.println(mode);
+#endif
 
     // Handle buttons
     modeButton(mode);
@@ -29,6 +44,9 @@ void buttonsCheck() {
 }
 
 void modeButton(uint8_t mode) {
+#ifdef DEBUG
+    Serial.println("modeButton:\tcalled");
+#endif
     if (!mode) {
         // Ignore the button if it's not pressed
         MODE_BUTTON_PRESSED = false;
@@ -38,6 +56,12 @@ void modeButton(uint8_t mode) {
         return;
     }
 
+#ifdef DEBUG
+    Serial.print("modeButton:\tmode:\t");
+    Serial.println(mode);
+#endif
+
+    MODE_BUTTON_PRESSED = true;
     MANUAL_MODE = !MANUAL_MODE;
 
     if (MANUAL_MODE) {

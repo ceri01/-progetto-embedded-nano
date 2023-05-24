@@ -80,6 +80,10 @@ void motorMoveFeedback() {
 	Move motors to maximize total brightness.
 */
 void executeMovement() {
+#ifdef DEBUG
+	Serial.println("executeMovement: called");
+#endif
+
 	const brightness data = readSensors();
 
 	// If it's dark, go home and have a good night sleep

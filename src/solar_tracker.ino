@@ -1,7 +1,6 @@
 #include "Config.h"
 
-#define DEBUG
-
+#include <TM1638plus.h>
 #include <TaskScheduler.h>
 #include <ArduinoJson.h>
 
@@ -25,6 +24,8 @@ Task goHomeFeedbackTask(GO_HOME_MOVEMENT_TIME + TASK_SECOND, TASK_FOREVER, &goHo
 Task windCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &windCheck);
 Task buttonsCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &buttonsCheck);
 
+TM1638plus tm(TM_STROBE, TM_CLOCK, TM_DIO, TM_HIGH_FREQ);
+
 void setup() {
 	Serial.begin(9600, SERIAL_7N1);
 
@@ -35,6 +36,8 @@ void setup() {
 	pinMode(WEST_SWITCH, OUTPUT);
 	pinMode(NORTH_LIMIT_SWITCH, INPUT);
 	pinMode(SOUTH_LIMIT_SWITCH, INPUT);
+
+	tm.displayBegin();
 
 	// Reset all relays
 	for (const auto direction : ALL_DIRECTIONS) {
