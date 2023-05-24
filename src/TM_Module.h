@@ -1,5 +1,5 @@
-#ifndef _BUTTONS_H
-#define _BUTTONS_H
+#ifndef _TM_MODULE_H
+#define _TM_MODULE_H
 
 void buttonsCheck();
 

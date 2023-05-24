@@ -6,7 +6,7 @@
 
 #include "Movement.h"
 #include "Sensors.h"
-#include "Buttons.h"
+#include "TM_Module.h"
 #ifdef ENABLE_COMMUNICATION
 #include "Communication.h"
 #endif
