@@ -23,6 +23,7 @@ Task sensorPrintDebugTask(1000, TASK_FOREVER, &sensorPrintDebug);
 Task goHomeFeedbackTask(GO_HOME_MOVEMENT_TIME + TASK_SECOND, TASK_FOREVER, &goHomeFeedback);
 Task windCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &windCheck);
 Task buttonsCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &buttonsCheck);
+Task displaySensorsTask(DISPLAY_CYCLE_INTERVAL, TASK_FOREVER, &displaySensors);
 
 TM1638plus tm(TM_STROBE, TM_CLOCK, TM_DIO, TM_HIGH_FREQ);
 
@@ -60,6 +61,7 @@ void setup() {
 	runner.addTask(goHomeFeedbackTask);
 	runner.addTask(windCheckTask);
 	runner.addTask(buttonsCheckTask);
+	runner.addTask(displaySensorsTask);
 
 	executeMovementTask.enable();
 #ifdef ENABLE_COMMUNICATION
@@ -70,6 +72,7 @@ void setup() {
 #endif
 	windCheckTask.enable();
 	buttonsCheckTask.enable();
+	displaySensorsTask.enable();
 }
 
 void loop() {

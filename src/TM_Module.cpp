@@ -2,6 +2,7 @@
 
 #include "TM_Module.h"
 #include "Config.h"
+#include "Sensors.h"
 
 extern Task executeMovementTask;
 extern Task windCheckTask;
@@ -20,6 +21,8 @@ enum BUTTON_MASK {
     WEST_BUTTON = 0x08,
     MODE_BUTTON = 0x80,
 };
+
+uint8_t SENSOR_DISPLAY_CYCLE = 0x00;
 
 void buttonsCheck() {
     const uint8_t buttons = tm.readButtons();
@@ -95,4 +98,45 @@ void directionsButtons(uint8_t north, uint8_t south, uint8_t east, uint8_t west)
     digitalWrite(SOUTH_SWITCH, south);
     digitalWrite(EAST_SWITCH, east);
     digitalWrite(WEST_SWITCH, west);
+}
+
+void displaySensors() {
+    #define CYCLE_SIZE 5
+
+    brightness sensors = readSensors();
+    
+    String directionStr;
+    uint8_t value;
+
+    switch (SENSOR_DISPLAY_CYCLE % CYCLE_SIZE) {
+        case 0:
+            directionStr = "NORD";
+            value = sensors.north;
+            break;
+        
+        case 1:
+            directionStr = "SUD ";
+            value = sensors.south;
+            break;
+
+        case 2:
+            directionStr = "EST ";
+            value = sensors.east;
+            break;
+
+        case 3:
+            directionStr = "WEST";
+            value = sensors.west;
+            break;
+
+        case 4:
+            directionStr = "WIND";
+            value = analogRead(WIND_SENSOR);
+            break;
+    }
+
+    char string[CYCLE_SIZE + 1];
+    snprintf(string, CYCLE_SIZE + 1, "%04d", value);
+    tm.displayText((directionStr + string).c_str());
+    SENSOR_DISPLAY_CYCLE++;
 }

@@ -7,4 +7,6 @@ void modeButton(uint8_t);
 
 void directionsButtons(uint8_t north, uint8_t south, uint8_t east, uint8_t west);
 
+void displaySensors();
+
 #endif
