@@ -1,5 +1,7 @@
 #include "Movement.h"
 
+#include <TM1638plus.h>
+
 #ifdef DEBUG
 #include <MemoryFree.h>
 #endif
@@ -12,6 +14,8 @@ extern Scheduler hpRunner;
 extern Task executeMovementTask;
 extern Task goHomeFeedbackTask;
 extern Task windCheckTask;
+
+extern TM1638plus tm;
 
 /*
 	Move a motor in a given direction for a given time (in milliseconds).
@@ -132,6 +136,9 @@ void goHome() {
 
 	// Spawn the goHomeFeedback task
 	goHomeFeedbackTask.enable();
+
+	// Display text
+	tm.displayText("SLEEP... ");
 }
 
 /*
