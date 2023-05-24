@@ -135,6 +135,7 @@ void goHome() {
 	windCheckTask.disable();
 
 	// Spawn the goHomeFeedback task
+	SOUTH_LIMIT_REACHED = false;
 	goHomeFeedbackTask.enable();
 
 	// Display text
