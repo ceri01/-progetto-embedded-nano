@@ -17,6 +17,22 @@ extern Task windCheckTask;
 
 extern TM1638plus tm;
 
+uint8_t directionToLEDNum(Direction direction) {
+	switch (direction) {
+		case Direction::North:
+			return 0;
+
+		case Direction::South:
+			return 1;
+		
+		case Direction::East:
+			return 2;
+
+		case Direction::West:
+			return 3;
+	}
+}
+
 /*
 	Move a motor in a given direction for a given time (in milliseconds).
 */
@@ -44,6 +60,9 @@ void motorMove(Direction direction, int period) {
 	Serial.print("Free memory:\t");
 	Serial.println(freeMemory());
 #endif
+
+	// Turn on corresponding LED on TM1638
+	tm.setLED(directionToLEDNum(direction), HIGH);
 }
 
 void motorMoveFeedback() {
@@ -72,6 +91,9 @@ void motorMoveFeedback() {
 
 	// Actually shut down the motor
 	digitalWrite(digitalPin, LOW);
+
+	// Shut down the LED
+	tm.setLED(directionToLEDNum(direction), LOW);
 
 	// Disable the task and free up the memory
 	Task *currentTask = hpRunner.getCurrentTask();
