@@ -53,6 +53,8 @@ void setup() {
 	runner.addTask(sensorPrintDebugTask);
 #endif
 	runner.addTask(goHomeFeedbackTask);
+	runner.addTask(windCheckTask);
+	runner.addTask(buttonsCheckTask);
 
 	executeMovementTask.enable();
 #ifdef ENABLE_COMMUNICATION
@@ -61,6 +63,8 @@ void setup() {
 #ifdef DEBUG
 	sensorPrintDebugTask.enable();
 #endif
+	windCheckTask.enable();
+	buttonsCheckTask.enable();
 }
 
 void loop() {
