@@ -14,6 +14,7 @@ extern Scheduler hpRunner;
 extern Task executeMovementTask;
 extern Task goHomeFeedbackTask;
 extern Task windCheckTask;
+extern Task displaySensorsTask;
 
 extern TM1638plus tm;
 
@@ -152,9 +153,10 @@ void goHome() {
 	Serial.println("GOING HOME");
 #endif
 
-	// Disable the wind and brightness check task
+	// Disable the 'auto mode' tasks
 	executeMovementTask.disable();
 	windCheckTask.disable();
+	displaySensorsTask.disable();
 
 	// Spawn the goHomeFeedback task
 	SOUTH_LIMIT_REACHED = false;
@@ -182,9 +184,10 @@ void goHomeFeedback() {
 #endif
 		goHomeFeedbackTask.disable();
 
-		// Re-enable the sensor check task
+		// Re-enable the 'auto mode' tasks
 		executeMovementTask.enableDelayed(HOME_SLEEP_TIME);
 		windCheckTask.enableDelayed(HOME_SLEEP_TIME);
+		displaySensorsTask.enableDelayed(HOME_SLEEP_TIME);
 
 		// Reset limit sensor
 		SOUTH_LIMIT_REACHED = false;

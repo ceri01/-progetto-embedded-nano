@@ -8,6 +8,7 @@ extern Task executeMovementTask;
 extern Task windCheckTask;
 extern Task goHomeFeedbackTask;
 extern Task buttonsCheckTask;
+extern Task displaySensorsTask;
 
 extern TM1638plus tm;
 
@@ -79,11 +80,15 @@ void modeButton(uint8_t mode) {
         executeMovementTask.disable();
         windCheckTask.disable();
         goHomeFeedbackTask.disable();
+        displaySensorsTask.disable();
+
         buttonsCheckTask.setInterval(BUTTONS_CHECK_INTERVAL_MANUAL);
         tm.displayText("NSEO----");
     } else {
         executeMovementTask.enable();
         windCheckTask.enable();
+        displaySensorsTask.enable();
+
         buttonsCheckTask.setInterval(BUTTONS_CHECK_INTERVAL);
         tm.displayText("--------");
     }
