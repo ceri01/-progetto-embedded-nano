@@ -15,6 +15,8 @@ struct brightness {
 
 struct brightness readSensors();
 
+uint8_t readWind();
+
 bool isDark(brightness levels);
 
 void windCheck();

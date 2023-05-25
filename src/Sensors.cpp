@@ -16,6 +16,10 @@ struct brightness readSensors() {
 	return brightnessLevel;
 }
 
+uint8_t readWind() {
+	return analogRead(WIND_SENSOR);
+}
+
 bool isDark(brightness levels) {
 	return (levels.north + levels.south + levels.east + levels.west) < DARK_LIMIT;
 }
@@ -24,7 +28,7 @@ void windCheck() {
 #ifdef DEBUG
 	Serial.println("windCheck called");
 #endif
-	int wind = analogRead(WIND_SENSOR);
+	int wind = readWind();
 	windData.addValue(wind);
 
 	if (windData.getCount() < WIND_SAMPLES) {
@@ -55,7 +59,7 @@ void sensorPrintDebug() {
 	Serial.print("\tW=");
 	Serial.print(sensors.west);
 	Serial.print("\tWind=");
-	Serial.print(analogRead(WIND_SENSOR));
+	Serial.print(readWind());
 	Serial.println();
 }
 #endif

@@ -136,7 +136,7 @@ void displaySensors() {
 
         case 4:
             directionStr = "WIND";
-            value = analogRead(WIND_SENSOR);
+            value = readWind();
             break;
     }
 
