@@ -68,7 +68,7 @@ void motorMove(Direction direction, int period) {
 
 void motorMoveFeedback() {
 #ifdef DEBUG
-	Serial.println("motorMoveFeedback called");
+	Serial.println("motorMoveFeedback:\tcalled");
 #endif
 
 	// Get LTS memory
@@ -78,17 +78,18 @@ void motorMoveFeedback() {
 	// Read limit switches
 	if (direction == Direction::North) {
 		NORTH_LIMIT_REACHED = !digitalRead(NORTH_LIMIT_SWITCH);
-#ifdef DEBUG
-		Serial.print("Limit north ");
-		Serial.println(NORTH_LIMIT_REACHED);
-#endif
+		SOUTH_LIMIT_REACHED = false;
 	} else if (direction == Direction::South) {
 		SOUTH_LIMIT_REACHED = !digitalRead(SOUTH_LIMIT_SWITCH);
-#ifdef DEBUG
-		Serial.print("Limit south ");
-		Serial.println(SOUTH_LIMIT_REACHED);
-#endif
+		NORTH_LIMIT_REACHED = false;
 	}
+
+#ifdef DEBUG
+	Serial.print("motorMoveFeedback:\tlimit north: ");
+	Serial.print(NORTH_LIMIT_REACHED);
+	Serial.print("\tlimit south: ");
+	Serial.println(SOUTH_LIMIT_REACHED);
+#endif
 
 	// Actually shut down the motor
 	digitalWrite(digitalPin, LOW);
