@@ -15,6 +15,7 @@ extern TM1638plus tm;
 bool MANUAL_MODE = false;
 bool MODE_BUTTON_PRESSED = false;
 
+// mask used to retrieve byte that represent buttons on TM1638plus
 enum BUTTON_MASK {
     NORTH_BUTTON = 0x01,
     SOUTH_BUTTON = 0x02,
@@ -77,14 +78,18 @@ void modeButton(uint8_t mode) {
     MANUAL_MODE = !MANUAL_MODE;
 
     if (MANUAL_MODE) {
+        // If manual mode is enabled disable all tasks except buttonsCheckTask
         executeMovementTask.disable();
         windCheckTask.disable();
         goHomeFeedbackTask.disable();
         displaySensorsTask.disable();
 
+        // Set interval of buttonsCheckTask
         buttonsCheckTask.setInterval(BUTTONS_CHECK_INTERVAL_MANUAL);
+        // Init display monitor
         tm.displayText("NSEO----");
     } else {
+        // If manual mode is not enabled rehabilitate all tasks and resume routine
         executeMovementTask.enable();
         windCheckTask.enable();
         displaySensorsTask.enable();
