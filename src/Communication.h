@@ -3,6 +3,9 @@
 
 #include "Sensors.h"
 
+/*
+    Serialize data to JSON and send to serial
+*/
 void sendData();
 
 #endif
