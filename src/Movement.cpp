@@ -34,9 +34,6 @@ uint8_t directionToLEDNum(Direction direction) {
 	}
 }
 
-/*
-	Move a motor in a given direction for a given time (in milliseconds).
-*/
 void motorMove(Direction direction, int period) {
 	uint8_t digitalPin = static_cast<int>(direction);
 	digitalWrite(digitalPin, HIGH);
@@ -104,9 +101,6 @@ void motorMoveFeedback() {
 	free(&direction);
 }
 
-/*
-	Move motors to maximize total brightness.
-*/
 void executeMovement() {
 #ifdef DEBUG
 	Serial.println("executeMovement: called");
@@ -146,9 +140,6 @@ void executeMovement() {
 	}
 }
 
-/*
-	Move panel to the default position (horizontal)
-*/
 void goHome() {
 #ifdef DEBUG
 	Serial.println("GOING HOME");
@@ -167,9 +158,6 @@ void goHome() {
 	tm.displayText("SLEEP... ");
 }
 
-/*
-	Periodically check if the 'going home' has reached the south limit
-*/
 void goHomeFeedback() {
 #ifdef DEBUG
 	Serial.println("goHomeFeedback called");

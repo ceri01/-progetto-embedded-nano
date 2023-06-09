@@ -11,8 +11,10 @@
 #include "Communication.h"
 #endif
 
+// Scheduler declaration
 Scheduler runner, hpRunner;
 
+// Tasks declaration
 Task executeMovementTask(SENSOR_CHECK_INTERVAL, TASK_FOREVER, &executeMovement);
 #ifdef ENABLE_COMMUNICATION
 Task communicationTask(COMMUNICATION_INTERVAL, TASK_FOREVER, &sendData);
@@ -25,11 +27,14 @@ Task windCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &windCheck);
 Task buttonsCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &buttonsCheck);
 Task displaySensorsTask(DISPLAY_CYCLE_INTERVAL, TASK_FOREVER, &displaySensors);
 
+// TM1638plus declatarion
 TM1638plus tm(TM_STROBE, TM_CLOCK, TM_DIO, TM_HIGH_FREQ);
 
 void setup() {
+	// init serial with baud rate and ECC
 	Serial.begin(9600, SERIAL_7N1);
 
+	// init pins
 	pinMode(LED, OUTPUT);
 	pinMode(NORTH_SWITCH, OUTPUT);
 	pinMode(SOUTH_SWITCH, OUTPUT);
@@ -48,7 +53,10 @@ void setup() {
 		digitalWrite(digitalPin, LOW);
 	}
 	
+	// init scheduler
 	runner.init();
+
+	// set priority of schedulers
 	runner.setHighPriorityScheduler(&hpRunner);
 
 	runner.addTask(executeMovementTask);
@@ -58,11 +66,13 @@ void setup() {
 #ifdef DEBUG
 	runner.addTask(sensorPrintDebugTask);
 #endif
+	// adding tasks
 	runner.addTask(goHomeFeedbackTask);
 	runner.addTask(windCheckTask);
 	runner.addTask(buttonsCheckTask);
 	runner.addTask(displaySensorsTask);
 
+	// enable tasks
 	executeMovementTask.enable();
 #ifdef ENABLE_COMMUNICATION
 	communicationTask.enable();
