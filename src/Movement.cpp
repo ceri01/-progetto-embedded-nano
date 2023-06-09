@@ -39,7 +39,7 @@ void motorMove(Direction direction, int period) {
 	digitalWrite(digitalPin, HIGH);
 
 #ifdef DEBUG
-	Serial.print("Moving motor on PIN ");
+	Serial.print("motorMove:\tMoving motor on PIN ");
 	Serial.print(digitalPin);
 	Serial.print(" for ");
 	Serial.print(period);
@@ -55,7 +55,7 @@ void motorMove(Direction direction, int period) {
 	motorFeedbackTask->setLtsPointer(directionHeap);
 
 #ifdef DEBUG
-	Serial.print("Free memory:\t");
+	Serial.print("motorMove:\tFree memory:\t");
 	Serial.println(freeMemory());
 #endif
 
@@ -103,7 +103,7 @@ void motorMoveFeedback() {
 
 void executeMovement() {
 #ifdef DEBUG
-	Serial.println("executeMovement: called");
+	Serial.println("executeMovement:\tcalled");
 #endif
 
 	const brightness data = readSensors();
@@ -120,29 +120,29 @@ void executeMovement() {
 	if (vertical > EPSILON && !NORTH_LIMIT_REACHED) {
 		motorMove(Direction::North, MOTOR_MOVEMENT_TIME);
 #ifdef DEBUG
-		Serial.println("Moving north.");
+		Serial.println("executeMovement:\tMoving north.");
 #endif
 	} else if (vertical < -EPSILON && !SOUTH_LIMIT_REACHED) {
 		motorMove(Direction::South, MOTOR_MOVEMENT_TIME);
 #ifdef DEBUG
-		Serial.println("Moving south.");
+		Serial.println("executeMovement:\tMoving south.");
 #endif
 	} else if (horizontal > EPSILON) {
 		motorMove(Direction::East, MOTOR_MOVEMENT_TIME);
 #ifdef DEBUG
-		Serial.println("Moving east.");
+		Serial.println("executeMovement:\tMoving east.");
 #endif
 	} else if (horizontal < -EPSILON) {
 		motorMove(Direction::West, MOTOR_MOVEMENT_TIME);
 #ifdef DEBUG
-		Serial.println("Moving west.");
+		Serial.println("executeMovement:\tMoving west.");
 #endif
 	}
 }
 
 void goHome() {
 #ifdef DEBUG
-	Serial.println("GOING HOME");
+	Serial.println("goHome:\tGOING HOME");
 #endif
 
 	// Disable the 'auto mode' tasks
@@ -160,16 +160,16 @@ void goHome() {
 
 void goHomeFeedback() {
 #ifdef DEBUG
-	Serial.println("goHomeFeedback called");
+	Serial.println("goHomeFeedback:\tcalled");
 #endif
 	if (!SOUTH_LIMIT_REACHED) {
 #ifdef DEBUG
-		Serial.println("goHomeFeedback: moving...");
+		Serial.println("goHomeFeedback:\tmoving...");
 #endif
 		motorMove(Direction::South, GO_HOME_MOVEMENT_TIME);
 	} else {
 #ifdef DEBUG
-		Serial.println("goHomeFeedback: self-destroy");
+		Serial.println("goHomeFeedback:\tself-destroy");
 #endif
 		goHomeFeedbackTask.disable();
 
