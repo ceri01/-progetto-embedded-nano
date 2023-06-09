@@ -26,20 +26,20 @@ bool isDark(brightness levels) {
 
 void windCheck() {
 #ifdef DEBUG
-	Serial.println("windCheck called");
+	Serial.println("windCheck:\tcalled");
 #endif
 	int wind = readWind();
 	windData.addValue(wind);
 
 	if (windData.getCount() < WIND_SAMPLES) {
 #ifdef DEBUG
-	Serial.println("windCheck: too few values");
+	Serial.println("windCheck:\ttoo few values");
 #endif
 		return;
 	}
 	if (windData.getMinInBuffer() > WIND_LIMIT) {
 #ifdef DEBUG
-	Serial.print("windCheck: ALERT!!!1!1 => min: ");
+	Serial.print("windCheck:\tALERT!!!1!1 => min: ");
 	Serial.println(windData.getMinInBuffer());
 #endif
 		windData.clear();
