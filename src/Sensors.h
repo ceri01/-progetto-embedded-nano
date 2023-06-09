@@ -13,15 +13,30 @@ struct brightness {
 	int west;
 };
 
+/*
+	Read and return the data provided from light sensors. 
+*/
 struct brightness readSensors();
 
+/*
+	Read and return the data provided from wind sensor
+*/
 uint8_t readWind();
 
+/*
+	Check if brightness is too low (if is night)
+*/
 bool isDark(brightness levels);
 
+/*
+	Check wind vhighalue and enable sleep mode if it's too 
+*/
 void windCheck();
 
 #ifdef DEBUG
+/*
+	Print sensors data to debug  	
+*/
 void sensorPrintDebug();
 #endif
 

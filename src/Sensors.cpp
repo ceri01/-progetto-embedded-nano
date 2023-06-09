@@ -4,9 +4,6 @@
 
 RunningAverage windData(WIND_SAMPLES);
 
-/*
-	Read and return the data provided from light sensors. 
-*/
 struct brightness readSensors() {
 	brightness brightnessLevel;
 	brightnessLevel.north = analogRead(NORTH_SENSOR);
@@ -50,7 +47,7 @@ void windCheck() {
 #ifdef DEBUG
 void sensorPrintDebug() {
 	brightness sensors = readSensors();
-	Serial.print("N=");
+	Serial.print("sensorPrintDebug:\tN=");
 	Serial.print(sensors.north);
 	Serial.print("\tS=");
 	Serial.print(sensors.south);
