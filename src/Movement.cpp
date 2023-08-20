@@ -36,7 +36,7 @@ uint8_t directionToLEDNum(Direction direction) {
 
 void motorMove(Direction direction, int period) {
 	uint8_t digitalPin = static_cast<int>(direction);
-	digitalWrite(digitalPin, HIGH);
+	digitalWrite(digitalPin, LOW);
 
 #ifdef DEBUG
 	Serial.print("motorMove:\tMoving motor on PIN ");
@@ -74,10 +74,10 @@ void motorMoveFeedback() {
 
 	// Read limit switches
 	if (direction == Direction::North) {
-		NORTH_LIMIT_REACHED = !digitalRead(NORTH_LIMIT_SWITCH);
+		NORTH_LIMIT_REACHED = digitalRead(NORTH_LIMIT_SWITCH);
 		SOUTH_LIMIT_REACHED = false;
 	} else if (direction == Direction::South) {
-		SOUTH_LIMIT_REACHED = !digitalRead(SOUTH_LIMIT_SWITCH);
+		SOUTH_LIMIT_REACHED = digitalRead(SOUTH_LIMIT_SWITCH);
 		NORTH_LIMIT_REACHED = false;
 	}
 
@@ -89,7 +89,7 @@ void motorMoveFeedback() {
 #endif
 
 	// Actually shut down the motor
-	digitalWrite(digitalPin, LOW);
+	digitalWrite(digitalPin, HIGH);
 
 	// Shut down the LED
 	tm.setLED(directionToLEDNum(direction), LOW);

@@ -104,10 +104,10 @@ void directionsButtons(uint8_t north, uint8_t south, uint8_t east, uint8_t west)
         return;
     }
 
-    digitalWrite(NORTH_SWITCH, north);
-    digitalWrite(SOUTH_SWITCH, south);
-    digitalWrite(EAST_SWITCH, east);
-    digitalWrite(WEST_SWITCH, west);
+    digitalWrite(NORTH_SWITCH, !north);
+    digitalWrite(SOUTH_SWITCH, !south);
+    digitalWrite(EAST_SWITCH, !east);
+    digitalWrite(WEST_SWITCH, !west);
 }
 
 void displaySensors() {

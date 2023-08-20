@@ -23,12 +23,12 @@
 #define WIND_SENSOR A4
 #define LED 13
 
-#define NORTH_SWITCH 3
-#define SOUTH_SWITCH 4
-#define EAST_SWITCH 6
-#define WEST_SWITCH 7
-#define NORTH_LIMIT_SWITCH 2
-#define SOUTH_LIMIT_SWITCH 5
+#define NORTH_SWITCH 4
+#define SOUTH_SWITCH 3
+#define EAST_SWITCH 7
+#define WEST_SWITCH 6
+#define NORTH_LIMIT_SWITCH 5
+#define SOUTH_LIMIT_SWITCH 2
 
 #define TM_STROBE 8
 #define TM_CLOCK 9

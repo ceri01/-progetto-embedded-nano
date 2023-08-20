@@ -50,7 +50,7 @@ void setup() {
 	// Reset all relays
 	for (const auto direction : ALL_DIRECTIONS) {
 		uint8_t digitalPin = static_cast<int>(direction);
-		digitalWrite(digitalPin, LOW);
+		digitalWrite(digitalPin, HIGH);
 	}
 	
 	// init scheduler

@@ -1,0 +1,71 @@
+diff --git a/src/Config.h b/src/Config.h
+index b099084..d4ba03a 100644
+--- a/src/Config.h
++++ b/src/Config.h
+@@ -23,12 +23,12 @@
+ #define WIND_SENSOR A4
+ #define LED 13
+ 
+-#define NORTH_SWITCH 3
+-#define SOUTH_SWITCH 4
+-#define EAST_SWITCH 6
+-#define WEST_SWITCH 7
+-#define NORTH_LIMIT_SWITCH 2
+-#define SOUTH_LIMIT_SWITCH 5
++#define NORTH_SWITCH 4
++#define SOUTH_SWITCH 3
++#define EAST_SWITCH 7
++#define WEST_SWITCH 6
++#define NORTH_LIMIT_SWITCH 5
++#define SOUTH_LIMIT_SWITCH 2
+ 
+ #define TM_STROBE 8
+ #define TM_CLOCK 9
+diff --git a/src/Movement.cpp b/src/Movement.cpp
+index d55f5d3..6f5b352 100644
+--- a/src/Movement.cpp
++++ b/src/Movement.cpp
+@@ -36,7 +36,7 @@ uint8_t directionToLEDNum(Direction direction) {
+ 
+ void motorMove(Direction direction, int period) {
+ 	uint8_t digitalPin = static_cast<int>(direction);
+-	digitalWrite(digitalPin, HIGH);
++	digitalWrite(digitalPin, LOW);
+ 
+ #ifdef DEBUG
+ 	Serial.print("motorMove:\tMoving motor on PIN ");
+@@ -74,10 +74,10 @@ void motorMoveFeedback() {
+ 
+ 	// Read limit switches
+ 	if (direction == Direction::North) {
+-		NORTH_LIMIT_REACHED = !digitalRead(NORTH_LIMIT_SWITCH);
++		NORTH_LIMIT_REACHED = digitalRead(NORTH_LIMIT_SWITCH);
+ 		SOUTH_LIMIT_REACHED = false;
+ 	} else if (direction == Direction::South) {
+-		SOUTH_LIMIT_REACHED = !digitalRead(SOUTH_LIMIT_SWITCH);
++		SOUTH_LIMIT_REACHED = digitalRead(SOUTH_LIMIT_SWITCH);
+ 		NORTH_LIMIT_REACHED = false;
+ 	}
+ 
+@@ -89,7 +89,7 @@ void motorMoveFeedback() {
+ #endif
+ 
+ 	// Actually shut down the motor
+-	digitalWrite(digitalPin, LOW);
++	digitalWrite(digitalPin, HIGH);
+ 
+ 	// Shut down the LED
+ 	tm.setLED(directionToLEDNum(direction), LOW);
+diff --git a/src/solar_tracker.ino b/src/solar_tracker.ino
+index 43a9264..e66fa12 100644
+--- a/src/solar_tracker.ino
++++ b/src/solar_tracker.ino
+@@ -50,7 +50,7 @@ void setup() {
+ 	// Reset all relays
+ 	for (const auto direction : ALL_DIRECTIONS) {
+ 		uint8_t digitalPin = static_cast<int>(direction);
+-		digitalWrite(digitalPin, LOW);
++		digitalWrite(digitalPin, HIGH);
+ 	}
+ 	
+ 	// init scheduler
