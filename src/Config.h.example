@@ -6,6 +6,9 @@
 /* Enable debug mode */
 // #define DEBUG
 
+/* Set serial baud rate */
+#define SERIAL_BAUD_RATE 115200
+
 #define ENABLE_COMMUNICATION
 
 // Task scheduler configuration

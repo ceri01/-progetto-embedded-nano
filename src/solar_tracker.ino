@@ -31,8 +31,8 @@ Task displaySensorsTask(DISPLAY_CYCLE_INTERVAL, TASK_FOREVER, &displaySensors);
 TM1638plus tm(TM_STROBE, TM_CLOCK, TM_DIO, TM_HIGH_FREQ);
 
 void setup() {
-	// init serial with baud rate and ECC
-	Serial.begin(9600, SERIAL_7N1);
+	// init serial with baud rate
+	Serial.begin(SERIAL_BAUD_RATE);
 
 	// init pins
 	pinMode(LED, OUTPUT);
