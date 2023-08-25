@@ -3,7 +3,9 @@
 
 #include <Arduino.h>
 
+/* Enable debug mode */
 // #define DEBUG
+
 #define ENABLE_COMMUNICATION
 
 // Task scheduler configuration
