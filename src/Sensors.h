@@ -23,6 +23,13 @@ struct brightness readSensors();
 */
 uint8_t readWind();
 
+#ifdef WIND_MQTT
+/*
+	MQTT wind callback
+*/
+void windMqttCallback(int);
+#endif
+
 /*
 	Check if brightness is too low (if is night)
 */

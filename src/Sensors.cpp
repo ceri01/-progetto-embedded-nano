@@ -1,6 +1,12 @@
 #include "Sensors.h"
 #include "Movement.h"
 #include "RunningAverage.h"
+#include <ArduinoMqttClient.h>
+
+#ifdef WIND_MQTT
+extern MqttClient mqtt;
+int RECEIVED_WIND;
+#endif
 
 RunningAverage windData(WIND_SAMPLES);
 
@@ -13,8 +19,28 @@ struct brightness readSensors() {
 	return brightnessLevel;
 }
 
+#ifdef WIND_MQTT
+/*
+	MQTT wind callback
+*/
+void windMqttCallback(int messageLength) {
+	while (mqtt.available()) {
+		RECEIVED_WIND = mqtt.parseInt();
+#ifdef DEBUG
+		Serial.print("windMqttCallback:\tread ");
+		Serial.println(RECEIVED_WIND);
+#endif
+	}
+}
+#endif
+
 uint8_t readWind() {
+	#ifdef WIND_ANALOG
 	return analogRead(WIND_SENSOR);
+	#endif
+	#ifdef WIND_MQTT
+	return RECEIVED_WIND;
+	#endif
 }
 
 bool isDark(brightness levels) {
