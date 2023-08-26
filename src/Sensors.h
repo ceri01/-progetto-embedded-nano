@@ -27,7 +27,7 @@ uint8_t readWind();
 /*
 	MQTT wind callback
 */
-void windMqttCallback(int);
+void windMqttCallback(String &topic, String &payload);
 #endif
 
 /*
