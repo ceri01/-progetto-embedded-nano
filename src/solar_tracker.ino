@@ -4,7 +4,7 @@
 #include <TaskScheduler.h>
 #include <ArduinoJson.h>
 #include <Ethernet.h>
-#include <ArduinoMqttClient.h>
+#include <MQTT.h>
 
 #include "Movement.h"
 #include "Sensors.h"
@@ -26,14 +26,17 @@ Task displaySensorsTask(DISPLAY_CYCLE_INTERVAL, TASK_FOREVER, &displaySensors);
 #ifdef WIND_MQTT
 // Libraries setup
 EthernetClient net;
-MqttClient mqtt(net);
+MQTTClient mqtt;
 
 void ethernetMaintain() {
 	Ethernet.maintain();
 }
 
 void mqttPoll() {
-	mqtt.poll();
+#ifdef DEBUG
+	Serial.println("mqttPoll: polling...");
+#endif
+	mqtt.loop();
 }
 
 Task ethernetMaintainTask(10 * TASK_MINUTE, TASK_FOREVER, &ethernetMaintain);
@@ -58,6 +61,8 @@ void networkSetup() {
 #ifdef DEBUG
 	Serial.println("Ethernet:\tinitialize with DHCP:");
 #endif
+
+	tm.displayText("DHCP.....");
 	if (Ethernet.begin(mac) == 0) {
 		Serial.println("Ethernet:\tfailed to configure Ethernet using DHCP");
 		while (true) {
@@ -75,9 +80,13 @@ void networkSetup() {
 	Initialize MQTT
 */
 void mqttSetup() {
+	mqtt.begin(net);
+	mqtt.onMessage(windMqttCallback);
+
 	Serial.print("MQTT:\tconnecting to MQTT");
-	mqtt.setUsernamePassword(MQTT_USERNAME, MQTT_PASSWORD);
-	while (!mqtt.connect(MQTT_HOST, MQTT_PORT)) {
+
+	mqtt.setHost(MQTT_HOST, MQTT_PORT);
+	while (!mqtt.connect("arduino_mega", MQTT_USERNAME, MQTT_PASSWORD)) {
 		Serial.print(".");
 		delay(200);
 	}
@@ -87,7 +96,6 @@ void mqttSetup() {
 #endif
 
 	mqtt.subscribe(MQTT_TOPIC);
-	mqtt.onMessage(windMqttCallback);
 }
 #endif  // WIND_MQTT
 
@@ -95,23 +103,23 @@ void setup() {
 	// init serial with baud rate
 	Serial.begin(SERIAL_BAUD_RATE);
 
-#ifdef WIND_MQTT
-	networkSetup();
-	mqttSetup();
-#endif
-
 	// init pins
 	pinMode(LED, OUTPUT);
 	pinMode(NORTH_SWITCH, OUTPUT);
 	pinMode(SOUTH_SWITCH, OUTPUT);
 	pinMode(EAST_SWITCH, OUTPUT);
 	pinMode(WEST_SWITCH, OUTPUT);
-	pinMode(NORTH_LIMIT_SWITCH, INPUT);
-	pinMode(SOUTH_LIMIT_SWITCH, INPUT);
+	pinMode(NORTH_LIMIT_SWITCH, INPUT_PULLUP);
+	pinMode(SOUTH_LIMIT_SWITCH, INPUT_PULLUP);
 
 	// Init display
 	tm.displayBegin();
 	tm.displayText("--------");
+
+#ifdef WIND_MQTT
+	networkSetup();
+	mqttSetup();
+#endif
 
 	// Reset all relays
 	for (const auto direction : ALL_DIRECTIONS) {
