@@ -7,18 +7,12 @@
 #include "Movement.h"
 #include "Sensors.h"
 #include "TM_Module.h"
-#ifdef ENABLE_COMMUNICATION
-#include "Communication.h"
-#endif
 
 // Scheduler declaration
 Scheduler runner, hpRunner;
 
 // Tasks declaration
 Task executeMovementTask(SENSOR_CHECK_INTERVAL, TASK_FOREVER, &executeMovement);
-#ifdef ENABLE_COMMUNICATION
-Task communicationTask(COMMUNICATION_INTERVAL, TASK_FOREVER, &sendData);
-#endif
 #ifdef DEBUG
 Task sensorPrintDebugTask(1000, TASK_FOREVER, &sensorPrintDebug);
 #endif
@@ -60,9 +54,6 @@ void setup() {
 	runner.setHighPriorityScheduler(&hpRunner);
 
 	runner.addTask(executeMovementTask);
-#ifdef ENABLE_COMMUNICATION
-	runner.addTask(communicationTask);
-#endif
 #ifdef DEBUG
 	runner.addTask(sensorPrintDebugTask);
 #endif
@@ -74,9 +65,6 @@ void setup() {
 
 	// enable tasks
 	executeMovementTask.enable();
-#ifdef ENABLE_COMMUNICATION
-	communicationTask.enable();
-#endif
 #ifdef DEBUG
 	sensorPrintDebugTask.enable();
 #endif

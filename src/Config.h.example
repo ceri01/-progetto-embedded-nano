@@ -9,8 +9,6 @@
 /* Set serial baud rate */
 #define SERIAL_BAUD_RATE 115200
 
-#define ENABLE_COMMUNICATION
-
 // Task scheduler configuration
 #define _TASK_PRIORITY
 // #define _TASK_WDT_IDS
