@@ -3,6 +3,8 @@
 #include <TM1638plus.h>
 #include <TaskScheduler.h>
 #include <ArduinoJson.h>
+#include <Ethernet.h>
+#include <ArduinoMqttClient.h>
 
 #include "Movement.h"
 #include "Sensors.h"
@@ -21,12 +23,82 @@ Task windCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &windCheck);
 Task buttonsCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &buttonsCheck);
 Task displaySensorsTask(DISPLAY_CYCLE_INTERVAL, TASK_FOREVER, &displaySensors);
 
+#ifdef WIND_MQTT
+// Libraries setup
+EthernetClient net;
+MqttClient mqtt(net);
+
+void ethernetMaintain() {
+	Ethernet.maintain();
+}
+
+void mqttPoll() {
+	mqtt.poll();
+}
+
+Task ethernetMaintainTask(10 * TASK_MINUTE, TASK_FOREVER, &ethernetMaintain);
+Task mqttPollTask(MQTT_POLL_TIME, TASK_FOREVER, &mqttPoll);
+#endif
+
 // TM1638plus declatarion
 TM1638plus tm(TM_STROBE, TM_CLOCK, TM_DIO, TM_HIGH_FREQ);
+
+#ifdef WIND_MQTT
+// Software reset
+void(* reset)(void) = 0;
+
+/*
+	Initialize Ethernet
+*/
+void networkSetup() {
+	byte mac[] = MAC_ADDRESS;
+
+	Ethernet.init(10);
+
+#ifdef DEBUG
+	Serial.println("Ethernet:\tinitialize with DHCP:");
+#endif
+	if (Ethernet.begin(mac) == 0) {
+		Serial.println("Ethernet:\tfailed to configure Ethernet using DHCP");
+		while (true) {
+			reset();
+		}
+	}
+
+#ifdef DEBUG
+	Serial.print("Ethernet:\tmy IP address: ");
+	Serial.println(Ethernet.localIP());
+#endif
+}
+
+/*
+	Initialize MQTT
+*/
+void mqttSetup() {
+	Serial.print("MQTT:\tconnecting to MQTT");
+	mqtt.setUsernamePassword(MQTT_USERNAME, MQTT_PASSWORD);
+	while (!mqtt.connect(MQTT_HOST, MQTT_PORT)) {
+		Serial.print(".");
+		delay(200);
+	}
+
+#ifdef DEBUG
+	Serial.println("\nMQTT: Connected!");
+#endif
+
+	mqtt.subscribe(MQTT_TOPIC);
+	mqtt.onMessage(windMqttCallback);
+}
+#endif  // WIND_MQTT
 
 void setup() {
 	// init serial with baud rate
 	Serial.begin(SERIAL_BAUD_RATE);
+
+#ifdef WIND_MQTT
+	networkSetup();
+	mqttSetup();
+#endif
 
 	// init pins
 	pinMode(LED, OUTPUT);
@@ -63,6 +135,11 @@ void setup() {
 	runner.addTask(buttonsCheckTask);
 	runner.addTask(displaySensorsTask);
 
+#ifdef WIND_MQTT
+	runner.addTask(ethernetMaintainTask);
+	runner.addTask(mqttPollTask);
+#endif
+
 	// enable tasks
 	executeMovementTask.enable();
 #ifdef DEBUG
@@ -71,6 +148,11 @@ void setup() {
 	windCheckTask.enable();
 	buttonsCheckTask.enable();
 	displaySensorsTask.enable();
+
+#ifdef WIND_MQTT
+	ethernetMaintainTask.enable();
+	mqttPollTask.enable();
+#endif
 }
 
 void loop() {

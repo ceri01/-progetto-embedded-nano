@@ -38,6 +38,31 @@
 #define TM_DIO 10
 #define TM_HIGH_FREQ false
 
+// Wind source
+// #define WIND_ANALOG
+// #define WIND_MQTT
+
+// MQTT parameters
+#define MQTT_HOST "192.168.1.100"
+#define MQTT_PORT 1883
+#define MQTT_USERNAME admin
+#define MQTT_PASSWORD password
+#define MQTT_TOPIC weather/wind-speed
+#define MQTT_POLL_TIME 30 * TIME_SECOND
+
+// Ethernet parameters
+#define MAC_ADDRESS {0xDE, 0xAD, 0xBE, 0x38, 0xFC, 0xF1}
+
+#if defined(WIND_ANALOG) && defined(WIND_MQTT)
+    #error Please select only ONE Wind SOURCE
+#endif
+#if defined(WIND_ANALOG) && !defined(WIND_SENSOR)
+    #error Please defined WIND_SENSOR analog PIN
+#endif
+#if defined(WIND_MQTT) && (!defined(MQTT_HOST) || !defined(MQTT_PORT) || !defined(MQTT_USERNAME) || !defined(MQTT_PASSWORD) || !defined(MQTT_TOPIC) || !defined(MAC_ADDRESS) || !defined(MQTT_POLL_TIME))
+    #error Please define MQTT parameters
+#endif
+
 #define EPSILON 100
 #define DARK_LIMIT 50
 #define WIND_LIMIT 100
