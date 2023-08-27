@@ -44,13 +44,23 @@ void motorMoveFeedback();
 void executeMovement();
 
 /*
-	Move panel to the default position (horizontal)
+	Move panel to the default position (vertical and horizontal)
 */
-void goHome();
+void goHomeDark();
+
+/*
+	Periodically check if the 'going home' has reached the south and east limit
+*/
+void goHomeDarkFeedback();
+
+/*
+    Move panel to the default position (vertical)
+*/
+void goHomeWind();
 
 /*
 	Periodically check if the 'going home' has reached the south limit
 */
-void goHomeFeedback();
+void goHomeWindFeedback();
 
 #endif

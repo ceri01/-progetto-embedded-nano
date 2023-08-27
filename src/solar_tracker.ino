@@ -19,7 +19,8 @@ Task executeMovementTask(SENSOR_CHECK_INTERVAL, TASK_FOREVER, &executeMovement);
 #ifdef DEBUG
 Task sensorPrintDebugTask(1000, TASK_FOREVER, &sensorPrintDebug);
 #endif
-Task goHomeFeedbackTask(GO_HOME_MOVEMENT_TIME + TASK_SECOND, TASK_FOREVER, &goHomeFeedback);
+Task goHomeDarkFeedbackTask(GO_HOME_MOVEMENT_TIME + TASK_SECOND, TASK_FOREVER, &goHomeDarkFeedback);
+Task goHomeWindFeedbackTask(GO_HOME_MOVEMENT_TIME + TASK_SECOND, TASK_FOREVER, &goHomeWindFeedback);
 Task windCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &windCheck);
 Task buttonsCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &buttonsCheck);
 Task displaySensorsTask(DISPLAY_CYCLE_INTERVAL, TASK_FOREVER, &displaySensors);
@@ -145,7 +146,7 @@ void setup() {
 	runner.addTask(sensorPrintDebugTask);
 #endif
 	// adding tasks
-	runner.addTask(goHomeFeedbackTask);
+	runner.addTask(goHomeDarkFeedbackTask);
 	runner.addTask(windCheckTask);
 	runner.addTask(buttonsCheckTask);
 	runner.addTask(displaySensorsTask);

@@ -62,7 +62,7 @@ void windCheck() {
 	Serial.println(windData.getMinInBuffer());
 #endif
 		windData.clear();
-		goHome();
+		goHomeWind();
 	}
 }
 

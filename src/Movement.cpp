@@ -14,7 +14,8 @@ bool WEST_LIMIT_REACHED = false;
 extern Scheduler runner;
 extern Scheduler hpRunner;
 extern Task executeMovementTask;
-extern Task goHomeFeedbackTask;
+extern Task goHomeDarkFeedbackTask;
+extern Task goHomeWindFeedbackTask;
 extern Task windCheckTask;
 extern Task displaySensorsTask;
 
@@ -128,7 +129,7 @@ void executeMovement() {
 
 	// If it's dark, go home and have a good night sleep
 	if (isDark(data)) {
-		goHome();
+		goHomeDark();
 		return;
 	}
 
@@ -158,9 +159,9 @@ void executeMovement() {
 	}
 }
 
-void goHome() {
+void goHomeDark() {
 #ifdef DEBUG
-	Serial.println("goHome:\tGOING HOME");
+	Serial.println("goHomeDark:\tGOING HOME");
 #endif
 
 	// Disable the 'auto mode' tasks
@@ -168,34 +169,34 @@ void goHome() {
 	windCheckTask.disable();
 	displaySensorsTask.disable();
 
-	// Spawn the goHomeFeedback task
+	// Spawn the goHomeDarkFeedback task
 	SOUTH_LIMIT_REACHED = false;
 	EAST_LIMIT_REACHED = false;
-	goHomeFeedbackTask.enable();
+	goHomeDarkFeedbackTask.enable();
 
 	// Display text
 	tm.displayText("SLEEP... ");
 }
 
-void goHomeFeedback() {
+void goHomeDarkFeedback() {
 #ifdef DEBUG
-	Serial.println("goHomeFeedback:\tcalled");
+	Serial.println("goHomeDarkFeedback:\tcalled");
 #endif
 	if (!SOUTH_LIMIT_REACHED) {
 #ifdef DEBUG
-		Serial.println("goHomeFeedback:\tmoving south...");
+		Serial.println("goHomeDarkFeedback:\tmoving south...");
 #endif
 		motorMove(Direction::South, GO_HOME_MOVEMENT_TIME);
 	} else if (!EAST_LIMIT_REACHED) {
 #ifdef DEBUG
-		Serial.println("goHomeFeedback:\tmoving east...");
+		Serial.println("goHomeDarkFeedback:\tmoving east...");
 #endif
 		motorMove(Direction::East, GO_HOME_MOVEMENT_TIME);
 	} else {
 #ifdef DEBUG
-		Serial.println("goHomeFeedback:\tself-destroy");
+		Serial.println("goHomeDarkFeedback:\tself-destroy");
 #endif
-		goHomeFeedbackTask.disable();
+		goHomeDarkFeedbackTask.disable();
 
 		// Re-enable the 'auto mode' tasks
 		executeMovementTask.enableDelayed(HOME_SLEEP_TIME);
@@ -205,5 +206,49 @@ void goHomeFeedback() {
 		// Reset limit sensor
 		SOUTH_LIMIT_REACHED = false;
 		EAST_LIMIT_REACHED = false;
+	}
+}
+
+void goHomeWind() {
+#ifdef DEBUG
+	Serial.println("goHomeWind:\tGOING HOME");
+#endif
+
+	// Disable the 'auto mode' tasks
+	executeMovementTask.disable();
+	windCheckTask.disable();
+	displaySensorsTask.disable();
+
+	// Spawn the goHomeWindFeedback task
+	SOUTH_LIMIT_REACHED = false;
+	goHomeWindFeedbackTask.enable();
+
+	// Display text
+	tm.displayText("WINDALRM");
+}
+
+
+void goHomeWindFeedback() {
+#ifdef DEBUG
+	Serial.println("goHomeWindFeedback:\tcalled");
+#endif
+	if (!SOUTH_LIMIT_REACHED) {
+#ifdef DEBUG
+		Serial.println("goHomeWindFeedback:\tmoving south...");
+#endif
+		motorMove(Direction::South, GO_HOME_MOVEMENT_TIME);
+	} else {
+#ifdef DEBUG
+		Serial.println("goHomeWindFeedback:\tself-destroy");
+#endif
+		goHomeWindFeedbackTask.disable();
+
+		// Re-enable the 'auto mode' tasks
+		executeMovementTask.enableDelayed(WIND_SLEEP_TIME);
+		windCheckTask.enableDelayed(WIND_SLEEP_TIME);
+		displaySensorsTask.enableDelayed(WIND_SLEEP_TIME);
+
+		// Reset limit sensor
+		SOUTH_LIMIT_REACHED = false;
 	}
 }
