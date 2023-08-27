@@ -223,8 +223,11 @@ void goHomeWind() {
 	SOUTH_LIMIT_REACHED = false;
 	goHomeWindFeedbackTask.enable();
 
-	// Display text
-	tm.displayText("WINDALRM");
+	// Display text and alarm LEDs
+	tm.displayText("WINdStOP");
+	for (int i = 4; i < 8; i++) {
+		tm.setLED(i, true);
+	}
 }
 
 

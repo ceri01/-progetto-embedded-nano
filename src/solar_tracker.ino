@@ -147,6 +147,7 @@ void setup() {
 #endif
 	// adding tasks
 	runner.addTask(goHomeDarkFeedbackTask);
+	runner.addTask(goHomeWindFeedbackTask);
 	runner.addTask(windCheckTask);
 	runner.addTask(buttonsCheckTask);
 	runner.addTask(displaySensorsTask);

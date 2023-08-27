@@ -113,6 +113,11 @@ void directionsButtons(uint8_t north, uint8_t south, uint8_t east, uint8_t west)
 void displaySensors() {
     #define CYCLE_SIZE 5
 
+    // Reset tm alarm LEDs
+    for (int i = 4; i < 8; i++) {
+        tm.setLED(i, false);
+    }
+
     brightness sensors = readSensors();
     
     String directionStr;
@@ -141,7 +146,7 @@ void displaySensors() {
 
         case 4:
             directionStr = "WIND";
-            value = readWind();
+            value = (uint8_t) readWind();
             break;
     }
 
