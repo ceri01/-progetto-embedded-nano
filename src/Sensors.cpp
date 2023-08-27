@@ -3,7 +3,7 @@
 #include "RunningAverage.h"
 
 #ifdef WIND_MQTT
-int RECEIVED_WIND;
+float RECEIVED_WIND;
 #endif
 
 RunningAverage windData(WIND_SAMPLES);
@@ -26,7 +26,7 @@ void windMqttCallback(String &topic, String &payload) {
 	Serial.print("windMqttCallback:\tread ");
 	Serial.println(payload);
 #endif
-	RECEIVED_WIND = payload.toInt();
+	RECEIVED_WIND = payload.toFloat();
 }
 #endif
 
