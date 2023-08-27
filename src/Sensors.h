@@ -21,7 +21,7 @@ struct brightness readSensors();
 /*
 	Read and return the data provided from wind sensor
 */
-uint8_t readWind();
+float readWind();
 
 #ifdef WIND_MQTT
 /*

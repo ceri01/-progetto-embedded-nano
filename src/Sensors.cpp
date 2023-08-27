@@ -30,9 +30,9 @@ void windMqttCallback(String &topic, String &payload) {
 }
 #endif
 
-uint8_t readWind() {
+float readWind() {
 	#ifdef WIND_ANALOG
-	return analogRead(WIND_SENSOR);
+	return (float) analogRead(WIND_SENSOR);
 	#endif
 	#ifdef WIND_MQTT
 	return RECEIVED_WIND;
@@ -47,7 +47,7 @@ void windCheck() {
 #ifdef DEBUG
 	Serial.println("windCheck:\tcalled");
 #endif
-	int wind = readWind();
+	float wind = readWind();
 	windData.addValue(wind);
 
 	if (windData.getCount() < WIND_SAMPLES) {
