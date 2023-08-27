@@ -8,6 +8,8 @@
 
 bool NORTH_LIMIT_REACHED = false;
 bool SOUTH_LIMIT_REACHED = false;
+bool EAST_LIMIT_REACHED = false;
+bool WEST_LIMIT_REACHED = false;
 
 extern Scheduler runner;
 extern Scheduler hpRunner;
@@ -80,13 +82,23 @@ void motorMoveFeedback() {
 	} else if (direction == Direction::South) {
 		SOUTH_LIMIT_REACHED = digitalRead(SOUTH_LIMIT_SWITCH);
 		NORTH_LIMIT_REACHED = false;
+	} else if (direction == Direction::East) {
+		EAST_LIMIT_REACHED = digitalRead(EAST_LIMIT_SWITCH);
+		WEST_LIMIT_REACHED = false;
+	} else if (direction == Direction::West) {
+		WEST_LIMIT_REACHED = digitalRead(WEST_LIMIT_SWITCH);
+		EAST_LIMIT_REACHED = false;
 	}
 
 #ifdef DEBUG
 	Serial.print("motorMoveFeedback:\tlimit north: ");
 	Serial.print(NORTH_LIMIT_REACHED);
 	Serial.print("\tlimit south: ");
-	Serial.println(SOUTH_LIMIT_REACHED);
+	Serial.print(SOUTH_LIMIT_REACHED);
+	Serial.print("\tlimit east: ");
+	Serial.print(EAST_LIMIT_REACHED);
+	Serial.print("\tlimit west: ");
+	Serial.println(WEST_LIMIT_REACHED);
 #endif
 
 	// Actually shut down the motor
@@ -133,12 +145,12 @@ void executeMovement() {
 #ifdef DEBUG
 		Serial.println("executeMovement:\tMoving south.");
 #endif
-	} else if (horizontal > EPSILON) {
+	} else if (horizontal > EPSILON && !EAST_LIMIT_REACHED) {
 		motorMove(Direction::East, MOTOR_MOVEMENT_TIME);
 #ifdef DEBUG
 		Serial.println("executeMovement:\tMoving east.");
 #endif
-	} else if (horizontal < -EPSILON) {
+	} else if (horizontal < -EPSILON && !WEST_LIMIT_REACHED) {
 		motorMove(Direction::West, MOTOR_MOVEMENT_TIME);
 #ifdef DEBUG
 		Serial.println("executeMovement:\tMoving west.");
@@ -158,6 +170,7 @@ void goHome() {
 
 	// Spawn the goHomeFeedback task
 	SOUTH_LIMIT_REACHED = false;
+	EAST_LIMIT_REACHED = false;
 	goHomeFeedbackTask.enable();
 
 	// Display text
@@ -170,9 +183,14 @@ void goHomeFeedback() {
 #endif
 	if (!SOUTH_LIMIT_REACHED) {
 #ifdef DEBUG
-		Serial.println("goHomeFeedback:\tmoving...");
+		Serial.println("goHomeFeedback:\tmoving south...");
 #endif
 		motorMove(Direction::South, GO_HOME_MOVEMENT_TIME);
+	} else if (!EAST_LIMIT_REACHED) {
+#ifdef DEBUG
+		Serial.println("goHomeFeedback:\tmoving east...");
+#endif
+		motorMove(Direction::East, GO_HOME_MOVEMENT_TIME);
 	} else {
 #ifdef DEBUG
 		Serial.println("goHomeFeedback:\tself-destroy");
@@ -186,5 +204,6 @@ void goHomeFeedback() {
 
 		// Reset limit sensor
 		SOUTH_LIMIT_REACHED = false;
+		EAST_LIMIT_REACHED = false;
 	}
 }
