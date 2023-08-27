@@ -6,7 +6,7 @@
 
 extern Task executeMovementTask;
 extern Task windCheckTask;
-extern Task goHomeFeedbackTask;
+extern Task goHomeDarkFeedbackTask;
 extern Task buttonsCheckTask;
 extern Task displaySensorsTask;
 
@@ -81,7 +81,7 @@ void modeButton(uint8_t mode) {
         // If manual mode is enabled disable all tasks except buttonsCheckTask
         executeMovementTask.disable();
         windCheckTask.disable();
-        goHomeFeedbackTask.disable();
+        goHomeDarkFeedbackTask.disable();
         displaySensorsTask.disable();
 
         // Set interval of buttonsCheckTask
