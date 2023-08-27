@@ -5,6 +5,7 @@
 #include <ArduinoJson.h>
 #include <Ethernet.h>
 #include <MQTT.h>
+#include <MemoryFree.h>
 
 #include "Movement.h"
 #include "Sensors.h"
@@ -35,8 +36,14 @@ void ethernetMaintain() {
 void mqttPoll() {
 #ifdef DEBUG
 	Serial.println("mqttPoll: polling...");
+	Serial.print("mqttPoll:\tmemory free before: ");
+	Serial.println(freeMemory());
 #endif
 	mqtt.loop();
+#ifdef DEBUG
+	Serial.print("mqttPoll:\tmemory after: ");
+	Serial.println(freeMemory());
+#endif
 }
 
 Task ethernetMaintainTask(10 * TASK_MINUTE, TASK_FOREVER, &ethernetMaintain);

@@ -65,7 +65,8 @@ void motorMove(Direction direction, int period) {
 
 void motorMoveFeedback() {
 #ifdef DEBUG
-	Serial.println("motorMoveFeedback:\tcalled");
+	Serial.print("motorMoveFeedback:\tcalled with ID=");
+	Serial.println(hpRunner.currentTask().getId());
 #endif
 
 	// Get LTS memory
@@ -96,9 +97,14 @@ void motorMoveFeedback() {
 
 	// Disable the task and free up the memory
 	Task *currentTask = hpRunner.getCurrentTask();
-	currentTask->disable();
+	hpRunner.deleteTask(*currentTask);
 	free(currentTask);
 	free(&direction);
+
+#ifdef DEBUG
+	Serial.print("motorMoveFeedback:\tmemory free:");
+	Serial.println(freeMemory());
+#endif
 }
 
 void executeMovement() {
