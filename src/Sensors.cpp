@@ -4,7 +4,10 @@
 
 #ifdef WIND_MQTT
 float RECEIVED_WIND;
+unsigned long RECEIVED_WIND_LAST_TIMESTAMP = 0;
 #endif
+
+extern unsigned long timer0_millis;
 
 RunningAverage windData(WIND_SAMPLES);
 
@@ -27,6 +30,13 @@ void windMqttCallback(String &topic, String &payload) {
 	Serial.println(payload);
 #endif
 	RECEIVED_WIND = payload.toFloat();
+	RECEIVED_WIND_LAST_TIMESTAMP = millis();
+}
+
+bool readWindOnEnable() {
+	// Avoid false positives, for example when switching from manual mode to auto mode 
+	RECEIVED_WIND_LAST_TIMESTAMP = millis();
+	return true;
 }
 #endif
 
@@ -46,6 +56,20 @@ bool isDark(brightness levels) {
 void windCheck() {
 #ifdef DEBUG
 	Serial.println("windCheck:\tcalled");
+#endif
+
+#ifdef WIND_MQTT
+	// millis() overflows every ~50 days. This prevents false positives. 
+	if (millis() - RECEIVED_WIND_LAST_TIMESTAMP > 24 * TASK_HOUR) {
+		// If the last timestamp is REALLY a long time far go, a overflow happened
+		RECEIVED_WIND_LAST_TIMESTAMP = millis();
+	}
+	if (millis() - RECEIVED_WIND_LAST_TIMESTAMP > WIND_MQTT_TIMEOUT) {
+#ifdef DEBUG
+		Serial.println("readWind:\tALARM!!11!! received wind last timestamp TOO OLD!");
+#endif
+		goHomeWind();
+	}
 #endif
 	float wind = readWind();
 	windData.addValue(wind);
@@ -79,6 +103,10 @@ void sensorPrintDebug() {
 	Serial.print(sensors.west);
 	Serial.print("\tWind=");
 	Serial.print(readWind());
+#ifdef WIND_MQTT
+	Serial.print("\tWindLastUpdate=");
+	Serial.print(RECEIVED_WIND_LAST_TIMESTAMP);
+#endif
 	Serial.println();
 }
 #endif
