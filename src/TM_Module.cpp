@@ -12,7 +12,7 @@ extern Task displaySensorsTask;
 
 extern TM1638plus tm;
 
-bool MANUAL_MODE = false;
+bool MANUAL_MODE = true;
 bool MODE_BUTTON_PRESSED = false;
 
 // mask used to retrieve byte that represent buttons on TM1638plus
