@@ -22,7 +22,7 @@ Task sensorPrintDebugTask(1000, TASK_FOREVER, &sensorPrintDebug);
 Task goHomeDarkFeedbackTask(GO_HOME_MOVEMENT_TIME + TASK_SECOND, TASK_FOREVER, &goHomeDarkFeedback);
 Task goHomeWindFeedbackTask(GO_HOME_MOVEMENT_TIME + TASK_SECOND, TASK_FOREVER, &goHomeWindFeedback);
 Task windCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &windCheck);
-Task buttonsCheckTask(BUTTONS_CHECK_INTERVAL, TASK_FOREVER, &buttonsCheck);
+Task buttonsCheckTask(BUTTONS_CHECK_INTERVAL_MANUAL, TASK_FOREVER, &buttonsCheck);
 Task displaySensorsTask(DISPLAY_CYCLE_INTERVAL, TASK_FOREVER, &displaySensors);
 
 #ifdef WIND_MQTT
@@ -160,18 +160,17 @@ void setup() {
 #endif
 
 	// enable tasks
-	executeMovementTask.enable();
 #ifdef DEBUG
 	sensorPrintDebugTask.enable();
 #endif
-	windCheckTask.enable();
 	buttonsCheckTask.enable();
-	displaySensorsTask.enable();
 
 #ifdef WIND_MQTT
 	ethernetMaintainTask.enable();
 	mqttPollTask.enable();
 #endif
+
+	tm.displayText("NSEO----");
 }
 
 void loop() {
