@@ -9,6 +9,7 @@
 
 #include "Movement.h"
 #include "Sensors.h"
+#include "Communication.h"
 #include "TM_Module.h"
 
 // Scheduler declaration
@@ -24,6 +25,7 @@ Task goHomeWindFeedbackTask(GO_HOME_MOVEMENT_TIME + TASK_SECOND, TASK_FOREVER, &
 Task windCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &windCheck);
 Task buttonsCheckTask(BUTTONS_CHECK_INTERVAL_MANUAL, TASK_FOREVER, &buttonsCheck);
 Task displaySensorsTask(DISPLAY_CYCLE_INTERVAL, TASK_FOREVER, &displaySensors);
+Task sendDataTask(COMMUNICATION_INTERVAL, TASK_FOREVER, &sendData);
 
 #ifdef WIND_MQTT
 // Libraries setup
@@ -151,6 +153,7 @@ void setup() {
 	runner.addTask(windCheckTask);
 	runner.addTask(buttonsCheckTask);
 	runner.addTask(displaySensorsTask);
+	runner.addTask(sendDataTask);
 
 #ifdef WIND_MQTT
 	runner.addTask(ethernetMaintainTask);
@@ -168,6 +171,7 @@ void setup() {
 #ifdef WIND_MQTT
 	ethernetMaintainTask.enable();
 	mqttPollTask.enable();
+	sendDataTask.enable();
 #endif
 
 	tm.displayText("NSEO----");
