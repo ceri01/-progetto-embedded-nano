@@ -49,6 +49,7 @@
 #define MQTT_PASSWORD password
 #define MQTT_TOPIC weather/wind-speed
 #define MQTT_POLL_TIME 30 * TIME_SECOND
+#define WIND_MQTT_TIMEOUT 5 * TASK_MINUTE
 
 // Ethernet parameters
 #define MAC_ADDRESS {0xDE, 0xAD, 0xBE, 0x38, 0xFC, 0xF1}

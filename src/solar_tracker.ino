@@ -22,7 +22,7 @@ Task sensorPrintDebugTask(1000, TASK_FOREVER, &sensorPrintDebug);
 Task goHomeDarkFeedbackTask(GO_HOME_MOVEMENT_TIME + TASK_SECOND, TASK_FOREVER, &goHomeDarkFeedback);
 Task goHomeWindFeedbackTask(GO_HOME_MOVEMENT_TIME + TASK_SECOND, TASK_FOREVER, &goHomeWindFeedback);
 Task windCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &windCheck);
-Task buttonsCheckTask(WIND_CHECK_INTERVAL, TASK_FOREVER, &buttonsCheck);
+Task buttonsCheckTask(BUTTONS_CHECK_INTERVAL, TASK_FOREVER, &buttonsCheck);
 Task displaySensorsTask(DISPLAY_CYCLE_INTERVAL, TASK_FOREVER, &displaySensors);
 
 #ifdef WIND_MQTT
@@ -155,6 +155,8 @@ void setup() {
 #ifdef WIND_MQTT
 	runner.addTask(ethernetMaintainTask);
 	runner.addTask(mqttPollTask);
+
+	windCheckTask.setOnEnable(readWindOnEnable);
 #endif
 
 	// enable tasks

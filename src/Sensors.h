@@ -18,6 +18,13 @@ struct brightness {
 */
 struct brightness readSensors();
 
+#ifdef WIND_MQTT
+/*
+	Reset the RECEIVED_WIND_LAST_TIMESTAMP
+*/
+bool readWindOnEnable();
+#endif 
+
 /*
 	Read and return the data provided from wind sensor
 */
