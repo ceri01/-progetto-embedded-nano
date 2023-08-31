@@ -11,6 +11,7 @@
 #include "Sensors.h"
 #include "Communication.h"
 #include "TM_Module.h"
+#include "Communication.h"
 
 // Scheduler declaration
 Scheduler runner, hpRunner;
@@ -51,6 +52,7 @@ void mqttPoll() {
 
 Task ethernetMaintainTask(10 * TASK_MINUTE, TASK_FOREVER, &ethernetMaintain);
 Task mqttPollTask(MQTT_POLL_TIME, TASK_FOREVER, &mqttPoll);
+Task sendDataTask(COMMUNICATION_INTERVAL, TASK_FOREVER, &sendData);
 #endif
 
 // TM1638plus declatarion
