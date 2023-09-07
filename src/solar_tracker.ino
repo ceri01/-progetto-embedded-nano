@@ -157,6 +157,8 @@ void setup() {
 	runner.addTask(displaySensorsTask);
 	runner.addTask(sendDataTask);
 
+	executeMovementTask.setOnEnable(executeMovementOnEnable);
+
 #ifdef WIND_MQTT
 	runner.addTask(ethernetMaintainTask);
 	runner.addTask(mqttPollTask);
