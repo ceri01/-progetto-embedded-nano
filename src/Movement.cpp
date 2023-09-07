@@ -178,7 +178,7 @@ void goHomeDark() {
 	displaySensorsTask.disable();
 
 	// Spawn the goHomeDarkFeedback task
-	SOUTH_LIMIT_REACHED = false;
+	NORTH_LIMIT_REACHED = false;
 	EAST_LIMIT_REACHED = false;
 	goHomeDarkFeedbackTask.enable();
 
@@ -190,11 +190,11 @@ void goHomeDarkFeedback() {
 #ifdef DEBUG
 	Serial.println("goHomeDarkFeedback:\tcalled");
 #endif
-	if (!SOUTH_LIMIT_REACHED) {
+	if (!NORTH_LIMIT_REACHED) {
 #ifdef DEBUG
-		Serial.println("goHomeDarkFeedback:\tmoving south...");
+		Serial.println("goHomeDarkFeedback:\tmoving north...");
 #endif
-		motorMove(Direction::South, GO_HOME_MOVEMENT_TIME);
+		motorMove(Direction::North, GO_HOME_MOVEMENT_TIME);
 	} else if (!EAST_LIMIT_REACHED) {
 #ifdef DEBUG
 		Serial.println("goHomeDarkFeedback:\tmoving east...");
@@ -212,7 +212,7 @@ void goHomeDarkFeedback() {
 		displaySensorsTask.enableDelayed(HOME_SLEEP_TIME);
 
 		// Reset limit sensor
-		SOUTH_LIMIT_REACHED = false;
+		NORTH_LIMIT_REACHED = false;
 		EAST_LIMIT_REACHED = false;
 	}
 }
@@ -228,7 +228,7 @@ void goHomeWind() {
 	displaySensorsTask.disable();
 
 	// Spawn the goHomeWindFeedback task
-	SOUTH_LIMIT_REACHED = false;
+	NORTH_LIMIT_REACHED = false;
 	goHomeWindFeedbackTask.enable();
 
 	// Display text and alarm LEDs
@@ -243,11 +243,11 @@ void goHomeWindFeedback() {
 #ifdef DEBUG
 	Serial.println("goHomeWindFeedback:\tcalled");
 #endif
-	if (!SOUTH_LIMIT_REACHED) {
+	if (!NORTH_LIMIT_REACHED) {
 #ifdef DEBUG
-		Serial.println("goHomeWindFeedback:\tmoving south...");
+		Serial.println("goHomeWindFeedback:\tmoving north...");
 #endif
-		motorMove(Direction::South, GO_HOME_MOVEMENT_TIME);
+		motorMove(Direction::North, GO_HOME_MOVEMENT_TIME);
 	} else {
 #ifdef DEBUG
 		Serial.println("goHomeWindFeedback:\tself-destroy");
@@ -260,6 +260,6 @@ void goHomeWindFeedback() {
 		displaySensorsTask.enableDelayed(WIND_SLEEP_TIME);
 
 		// Reset limit sensor
-		SOUTH_LIMIT_REACHED = false;
+		NORTH_LIMIT_REACHED = false;
 	}
 }
