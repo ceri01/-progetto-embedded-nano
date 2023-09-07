@@ -39,6 +39,11 @@ void motorMove(Direction, int);
 void motorMoveFeedback();
 
 /*
+    Reset limit switches
+*/
+bool executeMovementOnEnable();
+
+/*
 	Move motors to maximize total brightness.
 */
 void executeMovement();

@@ -120,6 +120,14 @@ void motorMoveFeedback() {
 #endif
 }
 
+bool executeMovementOnEnable() {
+	NORTH_LIMIT_REACHED = false;
+	SOUTH_LIMIT_REACHED = false;
+	EAST_LIMIT_REACHED = false;
+	WEST_LIMIT_REACHED = false;
+	return true;
+}
+
 void executeMovement() {
 #ifdef DEBUG
 	Serial.println("executeMovement:\tcalled");
