@@ -210,10 +210,6 @@ void goHomeDarkFeedback() {
 		executeMovementTask.enableDelayed(HOME_SLEEP_TIME);
 		windCheckTask.enableDelayed(HOME_SLEEP_TIME);
 		displaySensorsTask.enableDelayed(HOME_SLEEP_TIME);
-
-		// Reset limit sensor
-		NORTH_LIMIT_REACHED = false;
-		EAST_LIMIT_REACHED = false;
 	}
 }
 
@@ -258,8 +254,5 @@ void goHomeWindFeedback() {
 		executeMovementTask.enableDelayed(WIND_SLEEP_TIME);
 		windCheckTask.enableDelayed(WIND_SLEEP_TIME);
 		displaySensorsTask.enableDelayed(WIND_SLEEP_TIME);
-
-		// Reset limit sensor
-		NORTH_LIMIT_REACHED = false;
 	}
 }
